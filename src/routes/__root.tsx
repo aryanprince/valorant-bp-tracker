@@ -8,9 +8,9 @@ import {
 import appCss from "../index.css?url";
 
 const SITE = "https://valorant-bp-tracker.vercel.app";
-const TITLE = "BP Tracker | How many games till tier 50?";
+const TITLE = "BP Tracker | How many games to finish the pass?";
 const DESCRIPTION =
-	"Copy four numbers off your VALORANT battlepass screen and find out exactly how many games you need to hit tier 50 before the act ends. No spreadsheets, no tier-skip shame.";
+	"Copy four numbers off your VALORANT battlepass screen and find out exactly how many games you need to finish the battlepass before the act ends. No spreadsheets, no tier-skip shame.";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -34,7 +34,7 @@ export const Route = createRootRoute({
 			{
 				property: "og:image:alt",
 				content:
-					"BP Tracker: how many games till tier 50? 2 games a day, about 97 games total.",
+					"BP Tracker: how many games to finish the pass? 2 games a day, about 115 games total.",
 			},
 			{ name: "twitter:card", content: "summary_large_image" },
 			{ name: "twitter:title", content: TITLE },

@@ -35,12 +35,14 @@ function load(): Saved {
 		const saved = JSON.parse(raw) as Partial<Saved> & {
 			plan?: Partial<Settings>;
 		};
+		// The goal used to be a setting; it's always the full pass now.
+		const { goalTier: _, ...settings } = {
+			...DEFAULT_SETTINGS,
+			...migrate(saved.plan),
+			...saved.settings,
+		} as Settings & { goalTier?: number };
 		return {
-			settings: {
-				...DEFAULT_SETTINGS,
-				...migrate(saved.plan),
-				...saved.settings,
-			},
+			settings,
 			readings: saved.readings ?? {},
 			checkins: saved.checkins ?? {},
 		};

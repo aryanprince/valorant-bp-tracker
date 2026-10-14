@@ -6,17 +6,21 @@ import {
 	MODE_IDS,
 	MODES,
 	type ModeId,
+	PARTY_BOOST,
 	type Projection,
 	type Requirement,
 	type Settings,
 } from "@/lib/xp";
 
 import { RewardArt } from "./rewards";
-import { cn, Panel, Stat } from "./ui";
+import { cn, Label, Panel, Segmented, Stat, Toggle } from "./ui";
 
 const DAY = 24 * 60 * 60 * 1000;
+/** Mode · a day · total · finish, shared by the header and each row. */
+const ROW =
+	"grid grid-cols-[minmax(0,1fr)_2rem_3.75rem_4.5rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_5rem_6rem_8rem]";
 
-/** The answer: what to play from here to finish on time. */
+/** The answer: what to play from here to finish on time, in every mode. */
 export function NextSteps({
 	req,
 	settings,
@@ -36,58 +40,98 @@ export function NextSteps({
 }) {
 	const mode = settings.mode;
 	const plan = req.modes[mode];
-	const name = MODES[mode].short;
 	const done = req.remaining === 0;
 	const missions = settings.dailies || settings.weeklies;
 	const perWeek = settings.daysPerWeek < 7;
-	const finishLabel = fmtDate(now + plan.finishInDays * DAY);
+	const fewest = Math.min(...MODE_IDS.map((id) => req.modes[id].totalGames));
 
 	return (
 		<Panel
 			title="What to do"
 			aside={
-				<div className="flex flex-wrap justify-end gap-1">
-					{MODE_IDS.map((id) => (
-						<button
-							key={id}
-							type="button"
-							aria-pressed={id === mode}
-							onClick={() => onMode(id)}
-							className={cn(
-								"px-2 py-1 font-label font-semibold text-xs uppercase tracking-wider transition",
-								id === mode ? "bg-bone text-ink" : "text-mist hover:text-bone",
-							)}
-						>
-							{MODES[id].short}
-						</button>
-					))}
-				</div>
+				<span className="font-label text-mist text-xs uppercase tracking-wider">
+					Play {perWeek ? `${settings.daysPerWeek} days a week` : "every day"}
+				</span>
 			}
 		>
 			{done ? (
 				<Headline>
-					Tier {settings.goalTier} <span className="text-teal">done.</span> GG.
+					Tier {req.goalTier} <span className="text-teal">done.</span> GG.
 				</Headline>
 			) : (
 				<>
-					<p className="font-label font-semibold text-mist text-sm uppercase tracking-[0.2em]">
-						{name} · play{" "}
-						{perWeek ? `${settings.daysPerWeek} days a week` : "every day"}
-					</p>
-					<div className="mt-2 grid grid-cols-2 border border-line/60">
-						<BigNumber
-							value={plan.recommended}
-							unit={plan.recommended === 1 ? "game a day" : "games a day"}
-							tone="teal"
-						/>
-						<BigNumber
-							value={`~${plan.totalGames}`}
-							unit="games total"
-							note={`Tier ${settings.goalTier} by ${finishLabel}`}
-							className="border-line/60 border-l"
-						/>
+					<div
+						className={cn(
+							ROW,
+							"pb-2 font-label font-semibold text-mist text-xs uppercase tracking-[0.15em]",
+						)}
+					>
+						<span className="pl-2 sm:pl-3">Mode</span>
+						<span className="whitespace-nowrap text-right">A day</span>
+						<span className="text-right">Total</span>
+						<span className="whitespace-nowrap pr-2 text-right sm:pr-3">
+							Tier {req.goalTier} by
+						</span>
 					</div>
+					<fieldset aria-label="Mode to plan around">
+						{MODE_IDS.map((id) => {
+							const m = req.modes[id];
+							const on = id === mode;
+							return (
+								<button
+									key={id}
+									type="button"
+									aria-pressed={on}
+									onClick={() => onMode(id)}
+									className={cn(
+										ROW,
+										"w-full border-line/60 border-t border-l-2 py-3 text-left transition",
+										on
+											? "border-l-teal bg-bone/[0.06]"
+											: "border-l-transparent hover:bg-bone/[0.03]",
+									)}
+								>
+									<span className="min-w-0 pl-2 sm:pl-3">
+										<span className="block font-label font-semibold text-bone uppercase leading-tight tracking-wide sm:text-lg">
+											{MODES[id].short}
+										</span>
+										<span className="block text-mist text-xs">
+											{m.totalGames === fewest
+												? "Fewest games"
+												: m.dailiesFloor === null
+													? "No daily points"
+													: m.dailiesCover
+														? "Clears dailies"
+														: "Extra games"}
+										</span>
+									</span>
+									<span
+										className={cn(
+											"text-right font-display text-[1.75rem] tabular-nums sm:text-4xl",
+											on ? "text-teal" : "text-bone",
+										)}
+									>
+										{m.recommended}
+									</span>
+									<span className="text-right font-display text-[1.75rem] text-bone tabular-nums sm:text-4xl">
+										~{m.totalGames}
+									</span>
+									<span className="pr-2 text-right sm:pr-3">
+										<span className="block font-label font-semibold text-bone tabular-nums sm:text-lg">
+											{fmtDate(now + m.finishInDays * DAY)}
+										</span>
+										<span className="block text-mist text-xs">
+											{inDays(m.finishInDays)}
+										</span>
+									</span>
+								</button>
+							);
+						})}
+					</fieldset>
 					<p className="mt-4 max-w-xl text-bone/80 leading-relaxed">
+						<b className="font-label font-semibold text-bone uppercase tracking-wide">
+							{MODES[mode].short}:{" "}
+						</b>
 						{mode === "deathmatch" ? (
 							<>
 								Deathmatch doesn't count for dailies or weekly missions, so this
@@ -95,7 +139,8 @@ export function NextSteps({
 							</>
 						) : plan.dailiesCover && missions ? (
 							<>
-								That's what clears your dailies. Keep doing{" "}
+								{plural(plan.recommended, "game")} a day is what clears your
+								dailies. Keep doing{" "}
 								{settings.weeklies ? "those and your weekly missions" : "those"}{" "}
 								and you're done {daysEarly(plan.finishInDays, req.daysLeft)}.
 							</>
@@ -107,12 +152,10 @@ export function NextSteps({
 							</>
 						)}
 					</p>
-					{mode === "unrated" && (
-						<p className="mt-2 text-mist text-sm">
-							Competitive and Premier pay the same XP as Unrated (100 per round
-							played, 200 per round won), so count them the same.
-						</p>
-					)}
+					<p className="mt-2 text-mist text-sm">
+						Competitive and Premier pay the same XP as Unrated (100 per round
+						played, 200 per round won), so count them as Unrated / Comp.
+					</p>
 				</>
 			)}
 
@@ -138,7 +181,7 @@ export function NextSteps({
 			<PaceLine
 				pace={pace}
 				projection={projection}
-				goalTier={settings.goalTier}
+				goalTier={req.goalTier}
 				endTime={endTime}
 			/>
 		</Panel>
@@ -191,8 +234,9 @@ function PaceLine({
 						At this pace you'd end on{" "}
 						<b className="text-red">tier {p.projectedTier}</b>,{" "}
 						{plural(p.tiersShort, "tier")} short
-						{p.vpToFinish > 0 && ` (${fmt(p.vpToFinish)} VP to buy the rest)`}.
-						Play a bit more than the plan above to catch up.
+						{p.vpToFinish > 0 &&
+							` (${fmt(p.vpToFinish)} VP buys up to tier 50, the epilogue can't be bought)`}
+						. Play a bit more than the plan above to catch up.
 					</>
 				)}
 			</p>
@@ -200,42 +244,16 @@ function PaceLine({
 	);
 }
 
+function inDays(days: number) {
+	const n = Math.ceil(days);
+	return n < 1 ? "today" : n === 1 ? "tomorrow" : `in ${n} days`;
+}
+
 function daysEarly(finishInDays: number, daysLeft: number) {
 	const early = Math.floor(daysLeft - finishInDays);
 	return early >= 1
 		? `${plural(early, "day")} before the act ends`
 		: "right as the act ends";
-}
-
-function BigNumber({
-	value,
-	unit,
-	note,
-	tone = "bone",
-	className,
-}: {
-	value: React.ReactNode;
-	unit: string;
-	note?: string;
-	tone?: "bone" | "teal";
-	className?: string;
-}) {
-	return (
-		<div className={cn("px-4 py-3", className)}>
-			<p
-				className={cn(
-					"font-display text-6xl tabular-nums leading-none sm:text-7xl",
-					tone === "teal" ? "text-teal" : "text-bone",
-				)}
-			>
-				{value}
-			</p>
-			<p className="mt-1 font-label font-semibold text-bone uppercase tracking-wider">
-				{unit}
-			</p>
-			{note && <p className="text-mist text-xs">{note}</p>}
-		</div>
-	);
 }
 
 function Headline({ children }: { children: React.ReactNode }) {
@@ -250,11 +268,13 @@ function Headline({ children }: { children: React.ReactNode }) {
 export function Today({
 	req,
 	settings,
+	onChange,
 	dailiesDone,
 	missionsDone,
 }: {
 	req: Requirement;
 	settings: Settings;
+	onChange: (patch: Partial<Settings>) => void;
 	dailiesDone: number;
 	missionsDone: number;
 }) {
@@ -319,22 +339,49 @@ export function Today({
 					</li>
 				)}
 			</ul>
+
+			<div className="mt-4 space-y-3 border-line/60 border-t pt-4">
+				<Label>Boosts on match XP</Label>
+				<Toggle
+					checked={settings.gamePass}
+					onChange={(gamePass) => onChange({ gamePass })}
+					hint="+20% · check Rewards Programs in VALORANT's top bar"
+				>
+					PC Game Pass
+				</Toggle>
+				<div className="flex flex-wrap items-center justify-between gap-2">
+					<span className="font-label font-semibold text-bone uppercase tracking-wider">
+						Usually queue{" "}
+						<span className="text-mist">
+							{settings.partySize > 1
+								? `+${Math.round((PARTY_BOOST[settings.partySize] ?? 0) * 100)}%`
+								: "solo"}
+						</span>
+					</span>
+					<Segmented
+						label="Party size"
+						value={settings.partySize}
+						onChange={(partySize) => onChange({ partySize })}
+						options={[1, 2, 3, 4, 5].map((n) => ({
+							value: n,
+							label: n === 1 ? "Solo" : n,
+						}))}
+					/>
+				</div>
+			</div>
 			<Tip settings={settings} />
 		</Panel>
 	);
 }
 
-/** One nudge towards the cheapest XP you're not getting yet. */
+/** A nudge when you're skipping the cheapest XP there is. */
 function Tip({ settings: s }: { settings: Settings }) {
 	const tip = !s.weeklies
-		? "Weekly missions are over half the pass. Even a few a week saves dozens of games."
+		? "Weekly missions are about half the pass. Even a few a week saves dozens of games. Turn them on in settings."
 		: !s.dailies
-			? "Dailies are 4,000 XP a day for about 2 Unrated games. Cheapest XP in the game."
-			: !s.gamePass
-				? "Have PC Game Pass? Turn it on in settings for +20% match XP."
-				: s.partySize < 2
-					? "Queueing with a friend adds +8% match XP (up to +20% as a five-stack)."
-					: "You're getting every boost going. Just keep clearing missions.";
+			? "Dailies are 4,000 XP a day for about 2 Unrated games. Cheapest XP in the game. Turn them on in settings."
+			: null;
+	if (!tip) return null;
 	return (
 		<p className="mt-4 border-gold border-l-2 bg-gold/5 px-3 py-2 text-bone/80 text-sm">
 			<span className="font-label font-semibold text-gold uppercase tracking-wider">

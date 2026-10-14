@@ -52,8 +52,9 @@ function OgCard() {
 
 				<div className="mt-10 flex flex-1 gap-12">
 					<div className="flex w-[560px] flex-col">
-						<h1 className="font-display text-[92px] text-bone uppercase leading-[0.92]">
-							How many games till <span className="text-teal">tier 50?</span>
+						<h1 className="font-display text-[80px] text-bone uppercase leading-[0.92]">
+							How many games to{" "}
+							<span className="text-teal">finish the pass?</span>
 						</h1>
 						<p className="mt-6 text-2xl text-bone/80 leading-snug">
 							Copy four numbers off your battlepass screen. Get told exactly
@@ -77,7 +78,7 @@ function OgCard() {
 								</div>
 								<div className="border-line/70 border-l px-5 py-4">
 									<p className="font-display text-7xl text-bone leading-none">
-										~97
+										~115
 									</p>
 									<p className="mt-1 font-label font-semibold text-bone text-lg uppercase tracking-wider">
 										games total

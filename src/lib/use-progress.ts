@@ -51,9 +51,7 @@ export function useProgress(pass: Pass) {
 
 	const measured = measuredPace(tracker.checkins);
 	const pace = measured && measured.days >= MIN_PACE_DAYS ? measured : null;
-	const projection = pace
-		? project(pass, req, pace.perDay, tracker.settings.goalTier, now)
-		: null;
+	const projection = pace ? project(pass, req, pace.perDay, now) : null;
 
 	return {
 		...tracker,

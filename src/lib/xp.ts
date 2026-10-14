@@ -79,8 +79,6 @@ export const VP_PER_TIER = 300;
 /* -------------------------------------------------------------- Inputs -- */
 
 export type Settings = {
-	/** 50 = the main pass, 55 = including epilogue. */
-	goalTier: number;
 	premium: boolean;
 	gamePass: boolean;
 	partySize: number;
@@ -93,7 +91,6 @@ export type Settings = {
 };
 
 export const DEFAULT_SETTINGS: Settings = {
-	goalTier: 50,
 	premium: true,
 	gamePass: false,
 	partySize: 1,
@@ -206,6 +203,8 @@ export type ModePlan = {
 };
 
 export type Requirement = {
+	/** Always the whole pass, epilogue included. */
+	goalTier: number;
 	currentXp: number;
 	goalXp: number;
 	remaining: number;
@@ -231,7 +230,7 @@ export function requirement({
 	settings: Settings;
 	now: Date;
 }): Requirement {
-	const goalTier = Math.min(s.goalTier, maxTier(pass));
+	const goalTier = maxTier(pass);
 	const currentXp = totalXp(pass, reading.tier, reading.xpInTier);
 	const goalXp = xpThrough(pass, goalTier);
 	const remaining = Math.max(0, goalXp - currentXp);
@@ -305,6 +304,7 @@ export function requirement({
 
 	const next = tierAt(pass, reading.tier);
 	return {
+		goalTier,
 		currentXp,
 		goalXp,
 		remaining,
@@ -359,7 +359,6 @@ export function project(
 	pass: Pass,
 	req: Requirement,
 	perDay: number,
-	goalTier: number,
 	now: Date,
 ): Projection {
 	const full = xpThrough(pass, maxTier(pass));
@@ -374,7 +373,7 @@ export function project(
 			: perDay > 0 && req.remaining / perDay <= req.daysLeft
 				? now.getTime() + (req.remaining / perDay) * DAY
 				: null;
-	const goal = Math.min(goalTier, maxTier(pass));
+	const goal = req.goalTier;
 	const epilogueStart =
 		allTiers(pass).find((t) => t.epilogue)?.tier ?? Number.POSITIVE_INFINITY;
 	const buyable = Math.max(

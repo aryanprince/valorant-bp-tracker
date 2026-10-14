@@ -35,7 +35,8 @@ describe("requirement", () => {
 	const req = requirement({ pass, reading, settings: DEFAULT_SETTINGS, now });
 
 	test("splits what's left into weeklies, dailies and matches", () => {
-		expect(req.remaining).toBe(980_000 - 31_170);
+		expect(req.goalTier).toBe(55);
+		expect(req.remaining).toBe(1_162_500 - 31_170);
 		// 12 weeks × 3 missions, 1 already done, 15,800 each.
 		expect(req.weeklyMissionsLeft).toBe(35);
 		expect(req.sources.weeklies).toBe(35 * 15_800);
@@ -84,10 +85,12 @@ describe("history", () => {
 
 	test("a slow pace comes up short and prices the gap", () => {
 		const req = requirement({ pass, reading, settings: DEFAULT_SETTINGS, now });
-		const p = project(pass, req, 5000, 50, now);
+		const p = project(pass, req, 5000, now);
 		expect(p.onTrack).toBe(false);
 		expect(p.finishDate).toBeNull();
-		expect(p.vpToFinish).toBe(p.tiersShort * 300);
+		// Tiers 51-55 are the epilogue, which VP can't buy.
+		expect(p.projectedTier).toBeLessThan(50);
+		expect(p.vpToFinish).toBe((50 - p.projectedTier) * 300);
 	});
 });
 
@@ -98,7 +101,7 @@ describe("totals", () => {
 		// 2 a day, every day, until the finish line.
 		expect(unrated.totalGames).toBe(Math.ceil(2 * unrated.finishInDays));
 		expect(unrated.finishInDays).toBeLessThan(req.daysLeft);
-		expect(unrated.totalGames).toBeGreaterThan(80);
-		expect(unrated.totalGames).toBeLessThan(120);
+		expect(unrated.totalGames).toBeGreaterThan(100);
+		expect(unrated.totalGames).toBeLessThan(130);
 	});
 });

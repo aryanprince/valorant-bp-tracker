@@ -19,11 +19,10 @@ export function SettingsSheet({
 	checkins: number;
 }) {
 	const ref = useRef<HTMLDialogElement>(null);
-	const boosts = [
-		s.premium && "Premium",
-		s.gamePass && "Game Pass",
-		s.partySize > 1 && `Party of ${s.partySize}`,
-	].filter(Boolean);
+	const summary = [
+		s.premium ? "Premium" : "Free pass",
+		s.daysPerWeek < 7 ? `${s.daysPerWeek} days a week` : "Every day",
+	].join(" · ");
 
 	return (
 		<>
@@ -37,10 +36,7 @@ export function SettingsSheet({
 					<span className="block font-label font-semibold text-bone text-sm uppercase tracking-wider">
 						Settings
 					</span>
-					<span className="block text-mist text-xs">
-						Tier {s.goalTier} ·{" "}
-						{boosts.length ? boosts.join(", ") : "No boosts"}
-					</span>
+					<span className="block text-mist text-xs">{summary}</span>
 				</span>
 			</button>
 
@@ -66,55 +62,17 @@ export function SettingsSheet({
 
 					<div className="flex-1 space-y-7 overflow-y-auto p-5">
 						<section>
-							<Label>Goal</Label>
-							<Segmented
-								label="Goal tier"
-								value={s.goalTier}
-								onChange={(goalTier) => onChange({ goalTier })}
-								options={[
-									{ value: 50, label: "Tier 50" },
-									{ value: 55, label: "Tier 55 · Epilogue" },
-								]}
-							/>
-						</section>
-
-						<section>
-							<Label>Boosts (match XP only)</Label>
-							<p className="mb-3 text-mist text-xs">
-								Check the top bar in VALORANT: the Rewards Programs icon shows
-								Game Pass, the Battlepass page shows the 3% boost.
+							<Label>Battlepass</Label>
+							<Toggle
+								checked={s.premium}
+								onChange={(premium) => onChange({ premium })}
+								hint="+3% match XP · “Battlepass 3% XP boost enabled”"
+							>
+								Premium battlepass
+							</Toggle>
+							<p className="mt-2 text-mist text-xs">
+								Game Pass and party size live in the Today panel.
 							</p>
-							<div className="space-y-2">
-								<Toggle
-									checked={s.premium}
-									onChange={(premium) => onChange({ premium })}
-									hint="+3% · “Battlepass 3% XP boost enabled”"
-								>
-									Premium battlepass
-								</Toggle>
-								<Toggle
-									checked={s.gamePass}
-									onChange={(gamePass) => onChange({ gamePass })}
-									hint="+20% · PC Game Pass perk"
-								>
-									Xbox Game Pass
-								</Toggle>
-							</div>
-							<div className="mt-4">
-								<Label>Usual party size</Label>
-								<Segmented
-									label="Party size"
-									value={s.partySize}
-									onChange={(partySize) => onChange({ partySize })}
-									options={[
-										{ value: 1, label: "Solo" },
-										{ value: 2, label: "2 · 8%" },
-										{ value: 3, label: "3 · 12%" },
-										{ value: 4, label: "4 · 16%" },
-										{ value: 5, label: "5 · 20%" },
-									]}
-								/>
-							</div>
 						</section>
 
 						<section>

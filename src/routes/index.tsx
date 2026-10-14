@@ -94,6 +94,7 @@ function Tracker() {
 						<Today
 							req={p.req}
 							settings={p.settings}
+							onChange={p.setSettings}
 							dailiesDone={p.reading.dailiesDone}
 							missionsDone={p.reading.missionsDone}
 						/>
@@ -101,17 +102,16 @@ function Tracker() {
 
 					<XpSources req={p.req} settings={p.settings} />
 
-					<Panel
-						title="Progress over time"
-						aside={
-							<span className="font-label text-mist text-xs uppercase tracking-wider">
-								{p.checkins.length > 1
-									? `${p.checkins.length} days logged`
-									: "Builds as you update"}
-							</span>
-						}
-					>
-						{p.checkins.length > 1 ? (
+					{/* Only worth the space once there are a few days to draw. */}
+					{p.checkins.length > 1 && (
+						<Panel
+							title="Progress over time"
+							aside={
+								<span className="font-label text-mist text-xs uppercase tracking-wider">
+									{p.checkins.length} days logged
+								</span>
+							}
+						>
 							<PaceChart
 								start={clock.start}
 								end={clock.end}
@@ -121,14 +121,8 @@ function Tracker() {
 								projectedXp={p.projection?.projectedXp ?? null}
 								checkins={p.checkins}
 							/>
-						) : (
-							<p className="text-mist text-sm">
-								Each day you update your tier is saved as a check-in. Come back
-								tomorrow and your progress line shows up here, next to the pace
-								you need.
-							</p>
-						)}
-					</Panel>
+						</Panel>
+					)}
 				</div>
 
 				<HowItWorks />
