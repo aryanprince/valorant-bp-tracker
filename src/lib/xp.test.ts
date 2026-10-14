@@ -90,3 +90,15 @@ describe("history", () => {
 		expect(p.vpToFinish).toBe(p.tiersShort * 300);
 	});
 });
+
+describe("totals", () => {
+	test("total games and finish date follow the recommended rate", () => {
+		const req = requirement({ pass, reading, settings: DEFAULT_SETTINGS, now });
+		const unrated = req.modes.unrated;
+		// 2 a day, every day, until the finish line.
+		expect(unrated.totalGames).toBe(Math.ceil(2 * unrated.finishInDays));
+		expect(unrated.finishInDays).toBeLessThan(req.daysLeft);
+		expect(unrated.totalGames).toBeGreaterThan(80);
+		expect(unrated.totalGames).toBeLessThan(120);
+	});
+});

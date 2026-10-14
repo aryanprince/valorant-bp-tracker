@@ -85,6 +85,7 @@ function Tracker() {
 						<NextSteps
 							req={p.req}
 							settings={p.settings}
+							now={p.now.getTime()}
 							onMode={(mode) => p.setSettings({ mode })}
 							endTime={pass.endTime}
 							pace={p.pace}

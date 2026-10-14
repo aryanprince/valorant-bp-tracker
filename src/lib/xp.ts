@@ -25,7 +25,7 @@ export const MODES: Record<
 > = {
 	unrated: {
 		label: "Unrated / Comp",
-		short: "Unrated",
+		short: "Unrated / Comp",
 		xp: 4400,
 		dailyPoints: 11,
 	},
@@ -199,6 +199,10 @@ export type ModePlan = {
 	recommended: number;
 	/** Your dailies alone already cover the match XP you need. */
 	dailiesCover: boolean;
+	/** Days until the goal if you play `recommended` games each play day. */
+	finishInDays: number;
+	/** Every game you'd play between now and the finish, at that rate. */
+	totalGames: number;
 };
 
 export type Requirement = {
@@ -266,6 +270,23 @@ export function requirement({
 			const perDay = games / playDaysLeft;
 			const dailiesFloor = s.dailies ? gamesForDailies(mode) : null;
 			const recommended = Math.max(Math.ceil(perDay), dailiesFloor ?? 0);
+			// Playing the recommended amount usually beats the bare minimum, so
+			// work out when that actually crosses the line (missions spread evenly).
+			const xpPerDay =
+				playShare *
+					(recommended * gameXp(s, mode) +
+						(s.dailies ? DAILY_CHECKPOINTS * DAILY_CHECKPOINT_XP : 0)) +
+				(s.dailies ? catchUpPerWeek / 7 : 0) +
+				(daysLeft > 0 ? weekliesXp / daysLeft : 0);
+			const upfront = s.dailies ? todaysDailiesXp : 0;
+			const finishInDays =
+				remaining === 0
+					? 0
+					: Math.min(
+							daysLeft,
+							Math.max(0, remaining - upfront) / Math.max(1, xpPerDay),
+						);
+			const totalGames = Math.ceil(recommended * playShare * finishInDays);
 			return [
 				mode,
 				{
@@ -275,6 +296,8 @@ export function requirement({
 					dailiesFloor,
 					recommended,
 					dailiesCover: dailiesFloor !== null && perDay <= dailiesFloor,
+					finishInDays,
+					totalGames,
 				},
 			];
 		}),

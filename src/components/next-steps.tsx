@@ -24,9 +24,11 @@ export function NextSteps({
 	endTime,
 	pace,
 	projection,
+	now,
 }: {
 	req: Requirement;
 	settings: Settings;
+	now: number;
 	onMode: (mode: ModeId) => void;
 	endTime: string;
 	pace: { perDay: number; days: number } | null;
@@ -36,9 +38,9 @@ export function NextSteps({
 	const plan = req.modes[mode];
 	const name = MODES[mode].short;
 	const done = req.remaining === 0;
-	const totalGames = Math.round(plan.recommended * req.playDaysLeft);
 	const missions = settings.dailies || settings.weeklies;
 	const perWeek = settings.daysPerWeek < 7;
+	const finishLabel = fmtDate(now + plan.finishInDays * DAY);
 
 	return (
 		<Panel
@@ -69,14 +71,23 @@ export function NextSteps({
 			) : (
 				<>
 					<p className="font-label font-semibold text-mist text-sm uppercase tracking-[0.2em]">
-						Play {perWeek ? `${settings.daysPerWeek} days a week` : "every day"}
+						{name} · play{" "}
+						{perWeek ? `${settings.daysPerWeek} days a week` : "every day"}
 					</p>
-					<Headline>
-						<span className="text-teal">{plan.recommended}</span> {name}{" "}
-						{plan.recommended === 1 ? "game" : "games"}{" "}
-						<span className="text-bone/60">a day</span>
-					</Headline>
-					<p className="mt-3 max-w-xl text-bone/80 leading-relaxed">
+					<div className="mt-2 grid grid-cols-2 border border-line/60">
+						<BigNumber
+							value={plan.recommended}
+							unit={plan.recommended === 1 ? "game a day" : "games a day"}
+							tone="teal"
+						/>
+						<BigNumber
+							value={`~${plan.totalGames}`}
+							unit="games total"
+							note={`Tier ${settings.goalTier} by ${finishLabel}`}
+							className="border-line/60 border-l"
+						/>
+					</div>
+					<p className="mt-4 max-w-xl text-bone/80 leading-relaxed">
 						{mode === "deathmatch" ? (
 							<>
 								Deathmatch doesn't count for dailies or weekly missions, so this
@@ -86,26 +97,36 @@ export function NextSteps({
 							<>
 								That's what clears your dailies. Keep doing{" "}
 								{settings.weeklies ? "those and your weekly missions" : "those"}{" "}
-								and you reach tier {settings.goalTier} by {fmtDate(endTime)}.
+								and you're done {daysEarly(plan.finishInDays, req.daysLeft)}.
 							</>
 						) : (
 							<>
-								{missions ? "On top of your missions, that's " : "That's "}
-								about {plural(plan.games, `${name} game`)} of match XP before{" "}
-								{fmtDate(endTime)}.
+								{missions ? "Clear your missions too. " : ""}That's{" "}
+								{plural(plan.games, "game")} of extra match XP on top of what{" "}
+								{missions ? "missions give you" : "you have"}.
 							</>
 						)}
 					</p>
+					{mode === "unrated" && (
+						<p className="mt-2 text-mist text-sm">
+							Competitive and Premier pay the same XP as Unrated (100 per round
+							played, 200 per round won), so count them the same.
+						</p>
+					)}
 				</>
 			)}
 
 			<div className="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-4">
 				<Stat label="XP to go" value={fmtCompact(req.remaining)} />
-				<Stat label="Days left" value={Math.ceil(req.daysLeft)} />
 				<Stat
-					label="Games left"
-					value={done ? 0 : `~${totalGames}`}
-					sub={`${name}, at that rate`}
+					label="Days left"
+					value={Math.ceil(req.daysLeft)}
+					sub={`act ends ${fmtDate(endTime)}`}
+				/>
+				<Stat
+					label="Extra games"
+					value={plan.games}
+					sub="beyond dailies & missions"
 				/>
 				<Stat
 					label="XP a day"
@@ -175,6 +196,44 @@ function PaceLine({
 					</>
 				)}
 			</p>
+		</div>
+	);
+}
+
+function daysEarly(finishInDays: number, daysLeft: number) {
+	const early = Math.floor(daysLeft - finishInDays);
+	return early >= 1
+		? `${plural(early, "day")} before the act ends`
+		: "right as the act ends";
+}
+
+function BigNumber({
+	value,
+	unit,
+	note,
+	tone = "bone",
+	className,
+}: {
+	value: React.ReactNode;
+	unit: string;
+	note?: string;
+	tone?: "bone" | "teal";
+	className?: string;
+}) {
+	return (
+		<div className={cn("px-4 py-3", className)}>
+			<p
+				className={cn(
+					"font-display text-6xl tabular-nums leading-none sm:text-7xl",
+					tone === "teal" ? "text-teal" : "text-bone",
+				)}
+			>
+				{value}
+			</p>
+			<p className="mt-1 font-label font-semibold text-bone uppercase tracking-wider">
+				{unit}
+			</p>
+			{note && <p className="text-mist text-xs">{note}</p>}
 		</div>
 	);
 }

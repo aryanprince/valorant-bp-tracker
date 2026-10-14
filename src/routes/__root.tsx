@@ -7,9 +7,10 @@ import {
 
 import appCss from "../index.css?url";
 
-const TITLE = "BP Tracker | VALORANT battlepass calculator";
+const SITE = "https://valorant-bp-tracker.vercel.app";
+const TITLE = "BP Tracker | How many games till tier 50?";
 const DESCRIPTION =
-	"Punch in your tier and XP, see exactly when you'll finish the VALORANT battlepass.";
+	"Copy four numbers off your VALORANT battlepass screen and find out exactly how many games you need to hit tier 50 before the act ends. No spreadsheets, no tier-skip shame.";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -22,8 +23,23 @@ export const Route = createRootRoute({
 			{ title: TITLE },
 			{ name: "description", content: DESCRIPTION },
 			{ name: "theme-color", content: "#0f1923" },
+			{ property: "og:type", content: "website" },
+			{ property: "og:url", content: SITE },
+			{ property: "og:site_name", content: "BP Tracker" },
 			{ property: "og:title", content: TITLE },
 			{ property: "og:description", content: DESCRIPTION },
+			{ property: "og:image", content: `${SITE}/og.png` },
+			{ property: "og:image:width", content: "1200" },
+			{ property: "og:image:height", content: "630" },
+			{
+				property: "og:image:alt",
+				content:
+					"BP Tracker: how many games till tier 50? 2 games a day, about 97 games total.",
+			},
+			{ name: "twitter:card", content: "summary_large_image" },
+			{ name: "twitter:title", content: TITLE },
+			{ name: "twitter:description", content: DESCRIPTION },
+			{ name: "twitter:image", content: `${SITE}/og.png` },
 		],
 		links: [
 			{ rel: "stylesheet", href: appCss },
