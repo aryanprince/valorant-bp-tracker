@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@import "@fontsource/anton/400.css";
+@import "@fontsource/barlow/400.css";
+@import "@fontsource/barlow/500.css";
+@import "@fontsource/barlow/600.css";
+@import "@fontsource/barlow-condensed/500.css";
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/700.css";
+
+/* Palette lifted from the VALORANT client: deep navy panels, Riot red,
+   bone-white text, the teal "completed" accent and premium gold. */
+@theme {
+	--color-ink: #0f1923;
+	--color-panel: #16202d;
+	--color-panel-2: #1c2836;
+	--color-line: #2b3a4b;
+	--color-bone: #ece8e1;
+	--color-mist: #8b978f;
+	--color-red: #ff4655;
+	--color-red-dark: #bd3944;
+	--color-teal: #17e5b0;
+	--color-gold: #e8c26a;
+
+	--font-display: "Anton", "Impact", sans-serif;
+	--font-label: "Barlow Condensed", "Arial Narrow", sans-serif;
+	--font-sans: "Barlow", system-ui, sans-serif;
+}
+
+html {
+	color-scheme: dark;
+	background: var(--color-ink);
+}
+
+body {
+	min-height: 100dvh;
+	background:
+		linear-gradient(
+			135deg,
+			transparent 49.8%,
+			rgb(255 255 255 / 0.03) 50%,
+			transparent 50.2%
+		),
+		linear-gradient(
+			45deg,
+			transparent 49.8%,
+			rgb(255 255 255 / 0.025) 50%,
+			transparent 50.2%
+		),
+		radial-gradient(ellipse at 50% -10%, #1f3247 0%, var(--color-ink) 60%);
+	background-size:
+		520px 520px,
+		520px 520px,
+		100% 100%;
+	background-attachment: fixed;
+	color: var(--color-bone);
+	font-family: var(--font-sans);
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Slanted edge used on the client's PLAY button and tab headers. */
+.clip-slant {
+	clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+}
+
+.clip-corner {
+	clip-path: polygon(
+		0 0,
+		calc(100% - 12px) 0,
+		100% 12px,
+		100% 100%,
+		12px 100%,
+		0 calc(100% - 12px)
+	);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+input[type="number"] {
+	-moz-appearance: textfield;
+}

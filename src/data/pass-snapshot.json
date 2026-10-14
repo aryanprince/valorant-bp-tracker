@@ -1,0 +1,990 @@
+{
+	"id": "d18b7d8f-4971-2f89-5613-248257830e11",
+	"name": "Season 2026 // Act VI",
+	"actName": "ACT VI",
+	"episodeName": "V26",
+	"startTime": "2026-10-14T00:00:00Z",
+	"endTime": "2027-01-06T00:00:00Z",
+	"premiumVP": 1000,
+	"chapters": [
+		{
+			"number": 1,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 1,
+					"chapter": 1,
+					"xp": 0,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Solarium Bandit",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/34306910-4783-d3be-134a-6ea547cf8098/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 2,
+					"chapter": 1,
+					"xp": 2000,
+					"epilogue": false,
+					"reward": {
+						"kind": "buddy",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Hand Gravnet Buddy",
+						"icon": "https://media.valorant-api.com/buddylevels/52da29e1-44c3-f9fc-7868-f0b2c3c3d8a2/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 3,
+					"chapter": 1,
+					"xp": 2750,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 4,
+					"chapter": 1,
+					"xp": 3500,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Pearl Schema Card",
+						"icon": "https://media.valorant-api.com/playercards/94ea515a-4cc6-9412-aa15-1dadc9bce35c/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/94ea515a-4cc6-9412-aa15-1dadc9bce35c/wideart.png"
+					}
+				},
+				{
+					"tier": 5,
+					"chapter": 1,
+					"xp": 4250,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Datalink Judge",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/7105d018-473d-773b-c215-35836a4ea811/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "card",
+					"amount": 1,
+					"highlighted": false,
+					"name": "Warden Schema Card",
+					"icon": "https://media.valorant-api.com/playercards/b85c3ef6-4737-9a4f-cc60-5286bbd11731/displayicon.png",
+					"wideIcon": "https://media.valorant-api.com/playercards/b85c3ef6-4737-9a4f-cc60-5286bbd11731/wideart.png"
+				},
+				{
+					"kind": "title",
+					"amount": 1,
+					"highlighted": false,
+					"name": "\"Gearing Up\" Title",
+					"icon": null,
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 2,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 6,
+					"chapter": 2,
+					"xp": 5000,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "No Warden Spray",
+						"icon": "https://media.valorant-api.com/sprays/2cd2dd94-41b8-52e1-b81c-56a1158532b3/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 7,
+					"chapter": 2,
+					"xp": 5750,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Zoom and Boom Spray",
+						"icon": "https://media.valorant-api.com/sprays/988f5aa5-4081-95b3-7cc6-aea582b2b5c5/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 8,
+					"chapter": 2,
+					"xp": 6500,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 9,
+					"chapter": 2,
+					"xp": 7250,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": true,
+						"name": "Loyal Companions Card",
+						"icon": "https://media.valorant-api.com/playercards/3b9bc827-44d0-442d-8335-5dbced752668/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/3b9bc827-44d0-442d-8335-5dbced752668/wideart.png"
+					}
+				},
+				{
+					"tier": 10,
+					"chapter": 2,
+					"xp": 8000,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Keepsake Odin",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/1d2c70bd-4ca3-2643-5917-02be2eddd545/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "buddy",
+					"amount": 1,
+					"highlighted": false,
+					"name": "V26 ACT VI Coin Buddy",
+					"icon": "https://media.valorant-api.com/buddylevels/c90d7e20-49f7-d3f3-ad9e-469b1d30c54f/displayicon.png",
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 3,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 11,
+					"chapter": 3,
+					"xp": 8750,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Night Under The Stars Card",
+						"icon": "https://media.valorant-api.com/playercards/ac12278e-4458-6a7c-3e91-788da8cd226c/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/ac12278e-4458-6a7c-3e91-788da8cd226c/wideart.png"
+					}
+				},
+				{
+					"tier": 12,
+					"chapter": 3,
+					"xp": 9500,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Solarium Spray",
+						"icon": "https://media.valorant-api.com/sprays/9e7d4c09-4017-7df6-9896-28b40796fdfb/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 13,
+					"chapter": 3,
+					"xp": 10250,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 14,
+					"chapter": 3,
+					"xp": 11000,
+					"epilogue": false,
+					"reward": {
+						"kind": "buddy",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Solarium Buddy",
+						"icon": "https://media.valorant-api.com/buddylevels/e29061f8-4741-a355-4e97-e1ac87d5715c/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 15,
+					"chapter": 3,
+					"xp": 11750,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Solarium Spectre",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/0d2a0625-4ed5-74d4-37ed-9fb63fb7b8d7/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "radianite",
+					"amount": 10,
+					"highlighted": false,
+					"name": "10 Radianite",
+					"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+					"wideIcon": null
+				},
+				{
+					"kind": "title",
+					"amount": 1,
+					"highlighted": false,
+					"name": "\"Climbing\" Title",
+					"icon": null,
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 4,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 16,
+					"chapter": 4,
+					"xp": 12500,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": true,
+						"name": "Datalink Ghost",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/30b4450c-48b4-41aa-af84-4096b6aa49c4/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 17,
+					"chapter": 4,
+					"xp": 13250,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Bookworm Brim Card",
+						"icon": "https://media.valorant-api.com/playercards/20ab3f83-4a57-0705-cc7f-10bf477b1f46/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/20ab3f83-4a57-0705-cc7f-10bf477b1f46/wideart.png"
+					}
+				},
+				{
+					"tier": 18,
+					"chapter": 4,
+					"xp": 14000,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Keepsake Spray",
+						"icon": "https://media.valorant-api.com/sprays/58a09a68-4653-ce2c-7a9d-c9ba2adfbcac/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 19,
+					"chapter": 4,
+					"xp": 14750,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 20,
+					"chapter": 4,
+					"xp": 15500,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Keepsake Guardian",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/c1416153-4618-1df5-c604-6c88835b43ee/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "spray",
+					"amount": 1,
+					"highlighted": false,
+					"name": "No Phone Zone Spray",
+					"icon": "https://media.valorant-api.com/sprays/50fdfd88-49f3-d97f-5563-0c89cfc417a7/fulltransparenticon.png",
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 5,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 21,
+					"chapter": 5,
+					"xp": 16250,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": true,
+						"name": "Careful Now Spray",
+						"icon": "https://media.valorant-api.com/sprays/6f52988a-451f-afb1-2860-668f6ac31326/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 22,
+					"chapter": 5,
+					"xp": 17000,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 23,
+					"chapter": 5,
+					"xp": 17750,
+					"epilogue": false,
+					"reward": {
+						"kind": "buddy",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Refreshing Buddy",
+						"icon": "https://media.valorant-api.com/buddylevels/d9bb5c7c-473c-f6dd-a457-498cda06959c/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 24,
+					"chapter": 5,
+					"xp": 18500,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Datalink Spray",
+						"icon": "https://media.valorant-api.com/sprays/0c5dfa7e-4080-6d0c-b7fd-348efb292094/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 25,
+					"chapter": 5,
+					"xp": 19250,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Datalink Warden",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/80a9ca2c-4a7f-0e3a-3b60-4d82509c00ce/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "card",
+					"amount": 1,
+					"highlighted": false,
+					"name": "PlayZilla Tactisquirrel Card",
+					"icon": "https://media.valorant-api.com/playercards/d18ae42a-4d11-9bd9-f888-bc91bf316f81/displayicon.png",
+					"wideIcon": "https://media.valorant-api.com/playercards/d18ae42a-4d11-9bd9-f888-bc91bf316f81/wideart.png"
+				},
+				{
+					"kind": "radianite",
+					"amount": 10,
+					"highlighted": false,
+					"name": "10 Radianite",
+					"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 6,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 26,
+					"chapter": 6,
+					"xp": 20000,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Check The Playbook Spray",
+						"icon": "https://media.valorant-api.com/sprays/29bac100-41de-29ff-667f-46ad202d7f86/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 27,
+					"chapter": 6,
+					"xp": 20750,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 28,
+					"chapter": 6,
+					"xp": 21500,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Dimensional Drift Spray",
+						"icon": "https://media.valorant-api.com/sprays/aaeea80b-470d-8953-a24f-50b61808417d/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 29,
+					"chapter": 6,
+					"xp": 22250,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Solarium Card",
+						"icon": "https://media.valorant-api.com/playercards/2b45f061-4d89-6fef-eaf4-bdb39fdd7e4c/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/2b45f061-4d89-6fef-eaf4-bdb39fdd7e4c/wideart.png"
+					}
+				},
+				{
+					"tier": 30,
+					"chapter": 6,
+					"xp": 23000,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Solarium Phantom",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/d98e8c3d-4dbb-baa8-6d23-9ca57c9bb183/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "buddy",
+					"amount": 1,
+					"highlighted": false,
+					"name": "Count TactiBear Buddy",
+					"icon": "https://media.valorant-api.com/buddylevels/a0e3df15-4cdb-bacb-ac8f-d2a62c8e0b3a/displayicon.png",
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 7,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 31,
+					"chapter": 7,
+					"xp": 23750,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Datalink Card",
+						"icon": "https://media.valorant-api.com/playercards/5d2b95df-447f-c419-4660-bd9ef0137e42/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/5d2b95df-447f-c419-4660-bd9ef0137e42/wideart.png"
+					}
+				},
+				{
+					"tier": 32,
+					"chapter": 7,
+					"xp": 24500,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 33,
+					"chapter": 7,
+					"xp": 25250,
+					"epilogue": false,
+					"reward": {
+						"kind": "buddy",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Datalink Buddy",
+						"icon": "https://media.valorant-api.com/buddylevels/606ed9c3-4efa-17cb-6e3a-bfbfb76c242f/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 34,
+					"chapter": 7,
+					"xp": 26000,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": true,
+						"name": "Just Chillin' Spray",
+						"icon": "https://media.valorant-api.com/sprays/4f16491d-4d12-5b6c-8baa-57b382167790/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 35,
+					"chapter": 7,
+					"xp": 26750,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Datalink Bulldog",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/5039c000-4e99-9b53-4fe2-cc8670369332/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "radianite",
+					"amount": 10,
+					"highlighted": false,
+					"name": "10 Radianite",
+					"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+					"wideIcon": null
+				},
+				{
+					"kind": "title",
+					"amount": 1,
+					"highlighted": false,
+					"name": "\"Peak\" Title",
+					"icon": null,
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 8,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 36,
+					"chapter": 8,
+					"xp": 27500,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Scribble Healing Orb Spray",
+						"icon": "https://media.valorant-api.com/sprays/9b8caded-4165-40ef-d0c1-bcbcd4862004/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 37,
+					"chapter": 8,
+					"xp": 28250,
+					"epilogue": false,
+					"reward": {
+						"kind": "buddy",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Keepsake Buddy",
+						"icon": "https://media.valorant-api.com/buddylevels/18a9b76e-43cd-c1db-62e2-53922112a931/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 38,
+					"chapter": 8,
+					"xp": 29000,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Keepsake Card",
+						"icon": "https://media.valorant-api.com/playercards/14bcffd2-489a-e7e5-da32-32a7447ef9b9/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/14bcffd2-489a-e7e5-da32-32a7447ef9b9/wideart.png"
+					}
+				},
+				{
+					"tier": 39,
+					"chapter": 8,
+					"xp": 29750,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 40,
+					"chapter": 8,
+					"xp": 30500,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Keepsake Operator",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/b08e91b3-4e3d-0a32-8dee-c9833d41d11a/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "spray",
+					"amount": 1,
+					"highlighted": false,
+					"name": "Get Baited Spray",
+					"icon": "https://media.valorant-api.com/sprays/992b4d5d-46be-7c8b-f8f9-4092c694467a/fulltransparenticon.png",
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 9,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 41,
+					"chapter": 9,
+					"xp": 31250,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 42,
+					"chapter": 9,
+					"xp": 32000,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Pizza Time Card",
+						"icon": "https://media.valorant-api.com/playercards/f50228df-46b8-c6db-ff48-0a865946c037/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/f50228df-46b8-c6db-ff48-0a865946c037/wideart.png"
+					}
+				},
+				{
+					"tier": 43,
+					"chapter": 9,
+					"xp": 32750,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "No Big Deal Spray",
+						"icon": "https://media.valorant-api.com/sprays/0b76f1e0-42ab-ac61-5114-bb9372361d1f/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 44,
+					"chapter": 9,
+					"xp": 33500,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "HUUUH? Spray",
+						"icon": "https://media.valorant-api.com/sprays/b818bb76-4af0-0ae4-48a0-16a96e958f2c/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 45,
+					"chapter": 9,
+					"xp": 34250,
+					"epilogue": false,
+					"reward": {
+						"kind": "flex",
+						"amount": 1,
+						"highlighted": true,
+						"name": "Solarium Flex",
+						"icon": "https://media.valorant-api.com/flex/5a698a97-470b-7813-17e6-d3a6f5127b3f/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "buddy",
+					"amount": 1,
+					"highlighted": false,
+					"name": "Star Gazer Buddy",
+					"icon": "https://media.valorant-api.com/buddylevels/ff45ac4d-498d-18d2-b521-1cbc2a21f151/displayicon.png",
+					"wideIcon": null
+				}
+			]
+		},
+		{
+			"number": 10,
+			"epilogue": false,
+			"tiers": [
+				{
+					"tier": 46,
+					"chapter": 10,
+					"xp": 35000,
+					"epilogue": false,
+					"reward": {
+						"kind": "spray",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Aura Farming Spray",
+						"icon": "https://media.valorant-api.com/sprays/c958665a-444c-bf64-4361-af9b52aff4b9/fulltransparenticon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 47,
+					"chapter": 10,
+					"xp": 35750,
+					"epilogue": false,
+					"reward": {
+						"kind": "buddy",
+						"amount": 1,
+						"highlighted": true,
+						"name": "Pitmaster Buddy",
+						"icon": "https://media.valorant-api.com/buddylevels/96aa15db-480d-2f00-13ed-e9866e281fe5/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 48,
+					"chapter": 10,
+					"xp": 36500,
+					"epilogue": false,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Healer's Remorse Card",
+						"icon": "https://media.valorant-api.com/playercards/5c46f086-446b-4d0c-b054-07a387bdb038/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/5c46f086-446b-4d0c-b054-07a387bdb038/wideart.png"
+					}
+				},
+				{
+					"tier": 49,
+					"chapter": 10,
+					"xp": 37250,
+					"epilogue": false,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 50,
+					"chapter": 10,
+					"xp": 38000,
+					"epilogue": false,
+					"reward": {
+						"kind": "skin",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Solarium Hammer",
+						"icon": "https://media.valorant-api.com/weaponskinlevels/6dbcd80b-4e52-9d7c-7b4c-bf98d6cf2090/displayicon.png",
+						"wideIcon": null
+					}
+				}
+			],
+			"freeRewards": [
+				{
+					"kind": "skin",
+					"amount": 1,
+					"highlighted": false,
+					"name": "Keepsake Shorty",
+					"icon": "https://media.valorant-api.com/weaponskinlevels/fca06aa9-4066-62e4-631b-84b333cdc827/displayicon.png",
+					"wideIcon": null
+				},
+				{
+					"kind": "card",
+					"amount": 1,
+					"highlighted": false,
+					"name": "Anomalous Card",
+					"icon": "https://media.valorant-api.com/playercards/33bb7db7-49a1-3156-5a19-1eb6dfb158c4/displayicon.png",
+					"wideIcon": "https://media.valorant-api.com/playercards/33bb7db7-49a1-3156-5a19-1eb6dfb158c4/wideart.png"
+				}
+			]
+		},
+		{
+			"number": 11,
+			"epilogue": true,
+			"tiers": [
+				{
+					"tier": 51,
+					"chapter": 11,
+					"xp": 36500,
+					"epilogue": true,
+					"reward": {
+						"kind": "buddy",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Epilogue: Refreshing Buddy",
+						"icon": "https://media.valorant-api.com/buddylevels/998f103b-4d1b-a786-89bc-7b8fa61384e8/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 52,
+					"chapter": 11,
+					"xp": 36500,
+					"epilogue": true,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 53,
+					"chapter": 11,
+					"xp": 36500,
+					"epilogue": true,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 54,
+					"chapter": 11,
+					"xp": 36500,
+					"epilogue": true,
+					"reward": {
+						"kind": "radianite",
+						"amount": 10,
+						"highlighted": false,
+						"name": "10 Radianite",
+						"icon": "https://media.valorant-api.com/currencies/e59aa87c-4cbf-517a-5983-6e81511be9b7/displayicon.png",
+						"wideIcon": null
+					}
+				},
+				{
+					"tier": 55,
+					"chapter": 11,
+					"xp": 36500,
+					"epilogue": true,
+					"reward": {
+						"kind": "card",
+						"amount": 1,
+						"highlighted": false,
+						"name": "Epilogue: Bookworm Brim Card",
+						"icon": "https://media.valorant-api.com/playercards/63c8c169-49ed-d35f-3725-e9921dcf4b49/displayicon.png",
+						"wideIcon": "https://media.valorant-api.com/playercards/63c8c169-49ed-d35f-3725-e9921dcf4b49/wideart.png"
+					}
+				}
+			],
+			"freeRewards": []
+		}
+	],
+	"fetchedAt": "2026-10-14T14:07:41.233Z",
+	"source": "snapshot"
+}
