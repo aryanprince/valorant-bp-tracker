@@ -8,7 +8,7 @@ import { fmtDate } from "@/lib/format";
 
 export const Route = createFileRoute("/passes/")({
 	loader: () => fetchPassList(),
-	head: () => ({ meta: [{ title: "Every battlepass — BP Tracker" }] }),
+	head: () => ({ meta: [{ title: "Past passes | BP Tracker" }] }),
 	component: Passes,
 });
 

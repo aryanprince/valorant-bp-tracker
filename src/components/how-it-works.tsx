@@ -1,7 +1,5 @@
 import { fmtDate } from "@/lib/format";
 
-import { Panel } from "./ui";
-
 const FACTS: [string, string][] = [
 	[
 		"Tiers",
@@ -17,18 +15,22 @@ const FACTS: [string, string][] = [
 	],
 	[
 		"Weeklies",
-		"3 a week, they stack up until the act ends. Biggest XP source, but Riot doesn't publish the values — we assume 23,040 each (Act V's lowest) and only count what your games can clear.",
+		"3 a week, they stack up until the act ends. The biggest XP source. Riot doesn't publish the values, so we use the in-game number for this act (15,800 each in week 1) and you can update it in settings.",
 	],
 	[
 		"Boosts",
-		"Premium pass +3%, PC Game Pass +20%, party of 2–5 +8–20%. Match XP only — not dailies or weeklies. We assume they add up.",
+		"Premium pass +3%, PC Game Pass +20%, party of 2 to 5 +8% to +20%. Match XP only, not dailies or weeklies. We assume they add up.",
 	],
 ];
 
 export function HowItWorks() {
 	return (
-		<Panel title="How the numbers work">
-			<dl className="grid gap-x-8 gap-y-4 md:grid-cols-2">
+		<details className="group clip-corner border border-line/60 bg-panel/60">
+			<summary className="flex cursor-pointer list-none items-center justify-between px-5 py-3 font-label font-semibold text-bone text-sm uppercase tracking-[0.2em] [&::-webkit-details-marker]:hidden">
+				How the numbers work
+				<span className="text-mist transition group-open:rotate-45">+</span>
+			</summary>
+			<dl className="grid gap-x-8 gap-y-4 border-line/60 border-t p-5 md:grid-cols-2">
 				{FACTS.map(([term, text]) => (
 					<div key={term}>
 						<dt className="font-label font-semibold text-bone uppercase tracking-wider">
@@ -59,7 +61,7 @@ export function HowItWorks() {
 					</dd>
 				</div>
 			</dl>
-		</Panel>
+		</details>
 	);
 }
 

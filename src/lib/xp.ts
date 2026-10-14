@@ -12,50 +12,40 @@ export type ModeId = "unrated" | "swiftplay" | "quick" | "deathmatch";
 /**
  * Average XP and daily-checkpoint points per match.
  * - Unrated/Comp/Premier: 100 XP per round played + 200 per round won. An
- *   evenly matched game is ~22 rounds with ~11 wins → 4,400 XP, 11 points.
- * - Swiftplay: same per-round XP, first to 5 → ~8 rounds, ~4 wins → 1,600.
+ *   evenly matched game is ~22 rounds with ~11 wins: 4,400 XP, 11 points.
+ * - Swiftplay: same per-round XP, first to 5, so ~8 rounds and ~4 wins: 1,600.
  * - Spike Rush / TDM / Escalation: flat ~1,000 XP, 2 checkpoint points.
  * - Deathmatch: flat 900 XP and earns no daily points.
- * (wiki.playvalorant.com/en-us/Experience, /Dailies_and_Missions)
+ * (wiki.playvalorant.com/en-us/Experience, /Dailies_and_Missions, and the
+ * in-game Daily Missions panel)
  */
 export const MODES: Record<
 	ModeId,
-	{
-		label: string;
-		hint: string;
-		xp: number;
-		dailyPoints: number;
-		/** How much one game moves weekly missions vs. a full Unrated game. */
-		weeklyWeight: number;
-	}
+	{ label: string; short: string; xp: number; dailyPoints: number }
 > = {
 	unrated: {
 		label: "Unrated / Comp",
-		hint: "~4,400 XP a game",
+		short: "Unrated",
 		xp: 4400,
 		dailyPoints: 11,
-		weeklyWeight: 1,
 	},
 	swiftplay: {
 		label: "Swiftplay",
-		hint: "~1,600 XP a game",
+		short: "Swiftplay",
 		xp: 1600,
 		dailyPoints: 4,
-		weeklyWeight: 0.5,
 	},
 	quick: {
 		label: "Spike Rush / TDM",
-		hint: "~1,000 XP a game",
+		short: "Spike Rush",
 		xp: 1000,
 		dailyPoints: 2,
-		weeklyWeight: 0.3,
 	},
 	deathmatch: {
 		label: "Deathmatch",
-		hint: "900 XP, no dailies",
+		short: "Deathmatch",
 		xp: 900,
 		dailyPoints: 0,
-		weeklyWeight: 0,
 	},
 };
 
@@ -66,65 +56,63 @@ export const MODE_IDS = Object.keys(MODES) as ModeId[];
 /** 4 daily checkpoints × 1,000 XP, each needing 4 points. */
 export const DAILY_CHECKPOINTS = 4;
 export const DAILY_CHECKPOINT_XP = 1000;
-const POINTS_PER_CHECKPOINT = 4;
+const POINTS_PER_DAY = 16;
 /** A skipped day doubles one checkpoint the next time you play, up to 3 stacked. */
 const MAX_BONUS_CHECKPOINTS = 3;
 
 export const WEEKLY_MISSIONS = 3;
 /**
- * Riot doesn't publish weekly mission XP. Season 2026 Act V ran 23,040 →
- * 38,400 XP per mission; we take the floor to stay conservative. Players can
- * overwrite it with what their Missions tab shows.
+ * Riot doesn't publish weekly mission XP. Season 2026 Act VI week 1 shows
+ * +15,800 XP per mission in-game. Later weeks have historically paid more,
+ * so holding it flat is conservative. Players can update it each week.
  */
-export const DEFAULT_WEEKLY_MISSION_XP = 23040;
-/**
- * Weeklies are things like "100 kills", "18,000 damage", "play 10 games" —
- * roughly 10 Unrated games clears a week's set. Deathmatch doesn't count.
- * Missions stockpile until the act ends, so this is a budget, not a weekly cap.
- */
-const GAMES_PER_WEEKLY_SET = 10;
+export const DEFAULT_WEEKLY_MISSION_XP = 15800;
 
 /** Match-XP boosts. Riot doesn't document stacking; we assume they add up. */
 export const PREMIUM_BOOST = 0.03;
 export const GAME_PASS_BOOST = 0.2;
 export const PARTY_BOOST = [0, 0, 0.08, 0.12, 0.16, 0.2] as const;
 
+/** Riot's tier skip price (main tiers only, epilogue can't be bought). */
+export const VP_PER_TIER = 300;
+
 /* -------------------------------------------------------------- Inputs -- */
 
-export type Plan = {
-	/** Typical games per play day, by mode. */
-	games: Record<ModeId, number>;
-	daysPerWeek: number;
+export type Settings = {
+	/** 50 = the main pass, 55 = including epilogue. */
+	goalTier: number;
 	premium: boolean;
 	gamePass: boolean;
 	partySize: number;
-	/** Whether you bother with weekly missions at all. */
+	daysPerWeek: number;
+	dailies: boolean;
 	weeklies: boolean;
 	weeklyMissionXp: number;
-	/** 50 = the main pass, 55 = including epilogue. */
-	goalTier: number;
+	/** Which mode the headline answer is phrased in. */
+	mode: ModeId;
 };
 
-export const DEFAULT_PLAN: Plan = {
-	games: { unrated: 2, swiftplay: 1, quick: 0, deathmatch: 0 },
-	daysPerWeek: 5,
+export const DEFAULT_SETTINGS: Settings = {
+	goalTier: 50,
 	premium: true,
 	gamePass: false,
 	partySize: 1,
+	daysPerWeek: 7,
+	dailies: true,
 	weeklies: true,
 	weeklyMissionXp: DEFAULT_WEEKLY_MISSION_XP,
-	goalTier: 50,
+	mode: "unrated",
 };
 
 /** What you read off the battlepass screen. */
 export type Reading = {
 	/** The tier with the progress bar under it (still locked). */
 	tier: number;
-	/** "1,148 / 5,000 XP" → 1148. */
+	/** "1,420 / 7,250 XP" → 1420. */
 	xpInTier: number;
 	/** "DAILIES 4/4". */
 	dailiesDone: number;
-	/** "MISSIONS 0/3". */
+	/** "MISSIONS 1/3". */
 	missionsDone: number;
 };
 
@@ -135,6 +123,9 @@ export const allTiers = (pass: Pass): Tier[] =>
 
 export const maxTier = (pass: Pass) => allTiers(pass).length;
 
+export const tierAt = (pass: Pass, n: number) =>
+	allTiers(pass).find((t) => t.tier === n);
+
 /** Cumulative XP needed to *complete* tier n (tier 1 is free). */
 export function xpThrough(pass: Pass, n: number) {
 	let sum = 0;
@@ -142,8 +133,7 @@ export function xpThrough(pass: Pass, n: number) {
 	return sum;
 }
 
-export const tierXp = (pass: Pass, n: number) =>
-	allTiers(pass).find((t) => t.tier === n)?.xp ?? 0;
+export const tierXp = (pass: Pass, n: number) => tierAt(pass, n)?.xp ?? 0;
 
 /** Total XP earned so far, from what's on screen. */
 export const totalXp = (pass: Pass, tier: number, xpInTier: number) =>
@@ -180,207 +170,132 @@ export function actClock(pass: Pass, now: Date) {
 	return { start, end, totalDays, daysLeft, weeks, week };
 }
 
-/* ---------------------------------------------------------- Estimation -- */
+/* --------------------------------------------------------- What to do -- */
 
-export function boostOf(plan: Plan) {
-	return (
-		(plan.premium ? PREMIUM_BOOST : 0) +
-		(plan.gamePass ? GAME_PASS_BOOST : 0) +
-		(PARTY_BOOST[plan.partySize] ?? 0)
-	);
-}
+export const boostOf = (s: Settings) =>
+	(s.premium ? PREMIUM_BOOST : 0) +
+	(s.gamePass ? GAME_PASS_BOOST : 0) +
+	(PARTY_BOOST[s.partySize] ?? 0);
 
-/** XP on a day you play, split by source. Boosts only touch match XP. */
-export function playDay(plan: Plan, games = plan.games) {
-	let base = 0;
-	let points = 0;
-	for (const id of MODE_IDS) {
-		base += games[id] * MODES[id].xp;
-		points += games[id] * MODES[id].dailyPoints;
-	}
-	const checkpoints = Math.min(
-		DAILY_CHECKPOINTS,
-		Math.floor(points / POINTS_PER_CHECKPOINT),
-	);
-	return {
-		match: Math.round(base * (1 + boostOf(plan))),
-		dailies: checkpoints * DAILY_CHECKPOINT_XP,
-		checkpoints,
-	};
-}
+/** Boosted XP for one average game of a mode. */
+export const gameXp = (s: Settings, mode: ModeId) =>
+	MODES[mode].xp * (1 + boostOf(s));
 
-/** Average XP per calendar day across a typical week (excluding weeklies). */
-export function averageDay(plan: Plan, games = plan.games) {
-	const day = playDay(plan, games);
-	const days = Math.min(7, Math.max(0, plan.daysPerWeek));
-	const skipped = 7 - days;
-	// Skipped days bank a doubled checkpoint for your next session.
-	const bonus =
-		days > 0
-			? Math.min(skipped, MAX_BONUS_CHECKPOINTS, day.checkpoints) *
-				DAILY_CHECKPOINT_XP
-			: 0;
-	return ((day.match + day.dailies) * days + bonus) / 7;
-}
+/** Games a day it takes to clear all 4 daily checkpoints, or null if it can't. */
+export const gamesForDailies = (mode: ModeId) => {
+	const pts = MODES[mode].dailyPoints;
+	return pts > 0 ? Math.ceil(POINTS_PER_DAY / pts) : null;
+};
 
-export type Forecast = {
-	now: number;
+export type ModePlan = {
+	mode: ModeId;
+	/** Games still needed in total, on top of dailies and weeklies. */
+	games: number;
+	/** Spread over the play days left. */
+	perDay: number;
+	/** Games/day to clear dailies in this mode (null for Deathmatch). */
+	dailiesFloor: number | null;
+	/** What we'd actually tell you to play each day. */
+	recommended: number;
+	/** Your dailies alone already cover the match XP you need. */
+	dailiesCover: boolean;
+};
+
+export type Requirement = {
 	currentXp: number;
 	goalXp: number;
 	remaining: number;
 	daysLeft: number;
-	/** XP/day needed from here to finish exactly on the last day. */
+	playDaysLeft: number;
 	neededPerDay: number;
-	/** Expected XP/day from the plan (or measured pace). */
-	perDay: number;
-	weekliesLeft: number;
-	todaysDailiesLeft: number;
-	projectedXp: number;
-	projectedTier: number;
-	/** Null if you won't make it before the act ends. */
-	finishDate: number | null;
-	onTrack: boolean;
-	tiersShort: number;
-	vpToFinish: number;
-	/** Games per play day (in your usual mix) needed to make it. Null = not reachable. */
-	gamesNeeded: number | null;
+	/** Where the remaining XP will come from. */
+	sources: { weeklies: number; dailies: number; matches: number };
+	weeklyMissionsLeft: number;
+	todaysDailiesXp: number;
+	modes: Record<ModeId, ModePlan>;
+	nextUnlock: { tier: Tier; xpLeft: number } | null;
 };
 
-type ForecastInput = {
+export function requirement({
+	pass,
+	reading,
+	settings: s,
+	now,
+}: {
 	pass: Pass;
 	reading: Reading;
-	plan: Plan;
+	settings: Settings;
 	now: Date;
-	/** Override the plan's XP/day with a measured pace (already includes everything). */
-	measuredPerDay?: number;
-};
-
-/** Weekly mission XP still on the table for the rest of the act. */
-export function weeklyAvailable(pass: Pass, reading: Reading, now: Date) {
-	const { weeks, week } = actClock(pass, now);
-	return Math.max(
-		0,
-		(weeks - week + 1) * WEEKLY_MISSIONS - reading.missionsDone,
-	);
-}
-
-/** How much of it your play schedule will actually clear. */
-function weeklyLeft(
-	pass: Pass,
-	reading: Reading,
-	plan: Plan,
-	now: Date,
-	games = plan.games,
-) {
-	if (!plan.weeklies) return 0;
-	const available = weeklyAvailable(pass, reading, now);
-	const effortPerWeek =
-		MODE_IDS.reduce((n, id) => n + games[id] * MODES[id].weeklyWeight, 0) *
-		Math.min(7, plan.daysPerWeek);
-	const weeksLeft = actClock(pass, now).daysLeft / 7;
-	const clearable =
-		(effortPerWeek * weeksLeft * WEEKLY_MISSIONS) / GAMES_PER_WEEKLY_SET;
-	return Math.round(Math.min(available, clearable) * plan.weeklyMissionXp);
-}
-
-function expectedGain(
-	input: ForecastInput,
-	days: number,
-	games?: Plan["games"],
-) {
-	const { pass, reading, plan, now, measuredPerDay } = input;
-	if (measuredPerDay !== undefined && !games) return measuredPerDay * days;
-	const todaysDailies =
-		(DAILY_CHECKPOINTS - reading.dailiesDone) * DAILY_CHECKPOINT_XP;
-	const daily = averageDay(plan, games);
-	const left = actClock(pass, now).daysLeft;
-	const share = left > 0 ? Math.min(1, days / left) : 1;
-	return (
-		daily * days +
-		// Leftover dailies today only count if your usual day would finish them.
-		Math.min(todaysDailies, playDay(plan, games).dailies) * Math.min(1, days) +
-		weeklyLeft(pass, reading, plan, now, games) * share
-	);
-}
-
-export function forecast(input: ForecastInput): Forecast {
-	const { pass, reading, plan, now } = input;
-	const goalTier = Math.min(plan.goalTier, maxTier(pass));
+}): Requirement {
+	const goalTier = Math.min(s.goalTier, maxTier(pass));
 	const currentXp = totalXp(pass, reading.tier, reading.xpInTier);
 	const goalXp = xpThrough(pass, goalTier);
 	const remaining = Math.max(0, goalXp - currentXp);
-	const { daysLeft } = actClock(pass, now);
+	const clock = actClock(pass, now);
+	const { daysLeft } = clock;
+	const playShare = Math.min(7, Math.max(1, s.daysPerWeek)) / 7;
+	const playDaysLeft = Math.max(1, daysLeft * playShare);
 
-	// XP past the last epilogue tier doesn't go anywhere.
-	const projectedXp = Math.min(
-		xpThrough(pass, maxTier(pass)),
-		currentXp + expectedGain(input, daysLeft),
-	);
-	const projectedTier = Math.min(
-		maxTier(pass),
-		completedTier(pass, projectedXp),
-	);
-
-	// Walk forward a day at a time to find when you'd cross the line.
-	let finishDate: number | null = null;
-	if (remaining === 0) finishDate = now.getTime();
-	else {
-		for (let d = 1; d <= Math.ceil(daysLeft); d++) {
-			if (expectedGain(input, Math.min(d, daysLeft)) >= remaining) {
-				finishDate = now.getTime() + d * DAY;
-				break;
-			}
-		}
-	}
-
-	// Smallest number of games per play day (same mode mix) that gets there.
-	let gamesNeeded: number | null = null;
-	const totalGames = MODE_IDS.reduce((n, id) => n + plan.games[id], 0);
-	const mix =
-		totalGames > 0
-			? plan.games
-			: { unrated: 1, swiftplay: 0, quick: 0, deathmatch: 0 };
-	const mixSize = totalGames > 0 ? totalGames : 1;
-	if (remaining === 0) gamesNeeded = 0;
-	else if (plan.daysPerWeek > 0) {
-		for (let g = 0; g <= 40; g += 0.5) {
-			const games = Object.fromEntries(
-				MODE_IDS.map((id) => [id, (mix[id] / mixSize) * g]),
-			) as Plan["games"];
-			if (expectedGain(input, daysLeft, games) >= remaining) {
-				gamesNeeded = g;
-				break;
-			}
-		}
-	}
-
-	const tiersShort = Math.max(0, goalTier - projectedTier);
-	const epilogueStart =
-		allTiers(pass).find((t) => t.epilogue)?.tier ?? Number.POSITIVE_INFINITY;
-	// Epilogue tiers can't be bought.
-	const buyable = Math.max(
+	const weeklyMissionsLeft = Math.max(
 		0,
-		Math.min(goalTier, epilogueStart - 1) - projectedTier,
+		(clock.weeks - clock.week + 1) * WEEKLY_MISSIONS - reading.missionsDone,
 	);
+	const weekliesXp = s.weeklies ? weeklyMissionsLeft * s.weeklyMissionXp : 0;
 
+	const todaysDailiesXp =
+		(DAILY_CHECKPOINTS - reading.dailiesDone) * DAILY_CHECKPOINT_XP;
+	// Skipped days each bank one doubled checkpoint for later (max 3 at once).
+	const catchUpPerWeek =
+		Math.min(7 - Math.round(playShare * 7), MAX_BONUS_CHECKPOINTS) *
+		DAILY_CHECKPOINT_XP;
+	const futureDays = Math.max(0, Math.floor(daysLeft));
+	const dailiesXp = s.dailies
+		? todaysDailiesXp +
+			futureDays * playShare * DAILY_CHECKPOINTS * DAILY_CHECKPOINT_XP +
+			(futureDays / 7) * catchUpPerWeek
+		: 0;
+
+	// Missions are fixed-size pots; whatever's left has to come from matches.
+	const weeklies = Math.min(remaining, weekliesXp);
+	const dailies = Math.min(remaining - weeklies, dailiesXp);
+	const matches = remaining - weeklies - dailies;
+
+	const modes = Object.fromEntries(
+		MODE_IDS.map((mode) => {
+			const games = Math.ceil(matches / gameXp(s, mode));
+			const perDay = games / playDaysLeft;
+			const dailiesFloor = s.dailies ? gamesForDailies(mode) : null;
+			const recommended = Math.max(Math.ceil(perDay), dailiesFloor ?? 0);
+			return [
+				mode,
+				{
+					mode,
+					games,
+					perDay,
+					dailiesFloor,
+					recommended,
+					dailiesCover: dailiesFloor !== null && perDay <= dailiesFloor,
+				},
+			];
+		}),
+	) as Record<ModeId, ModePlan>;
+
+	const next = tierAt(pass, reading.tier);
 	return {
-		now: now.getTime(),
 		currentXp,
 		goalXp,
 		remaining,
 		daysLeft,
+		playDaysLeft,
 		neededPerDay: daysLeft > 0 ? remaining / daysLeft : remaining,
-		perDay: daysLeft > 0 ? expectedGain(input, daysLeft) / daysLeft : 0,
-		weekliesLeft: weeklyLeft(pass, reading, plan, now),
-		todaysDailiesLeft:
-			(DAILY_CHECKPOINTS - reading.dailiesDone) * DAILY_CHECKPOINT_XP,
-		projectedXp,
-		projectedTier,
-		finishDate,
-		onTrack: projectedXp >= goalXp,
-		tiersShort,
-		vpToFinish: buyable * 300,
-		gamesNeeded,
+		sources: { weeklies, dailies, matches },
+		weeklyMissionsLeft,
+		todaysDailiesXp,
+		modes,
+		nextUnlock:
+			next && reading.tier <= maxTier(pass)
+				? { tier: next, xpLeft: Math.max(0, next.xp - reading.xpInTier) }
+				: null,
 	};
 }
 
@@ -405,4 +320,50 @@ export function measuredPace(checkins: Checkin[]) {
 	const days = (last.at - first.at) / DAY;
 	if (days < 1) return null;
 	return { perDay: (last.xp - first.xp) / days, days };
+}
+
+export type Projection = {
+	projectedXp: number;
+	projectedTier: number;
+	finishDate: number | null;
+	onTrack: boolean;
+	tiersShort: number;
+	vpToFinish: number;
+};
+
+/** Where your measured pace lands you by the end of the act. */
+export function project(
+	pass: Pass,
+	req: Requirement,
+	perDay: number,
+	goalTier: number,
+	now: Date,
+): Projection {
+	const full = xpThrough(pass, maxTier(pass));
+	const projectedXp = Math.min(full, req.currentXp + perDay * req.daysLeft);
+	const projectedTier = Math.min(
+		maxTier(pass),
+		completedTier(pass, projectedXp),
+	);
+	const finishDate =
+		req.remaining === 0
+			? now.getTime()
+			: perDay > 0 && req.remaining / perDay <= req.daysLeft
+				? now.getTime() + (req.remaining / perDay) * DAY
+				: null;
+	const goal = Math.min(goalTier, maxTier(pass));
+	const epilogueStart =
+		allTiers(pass).find((t) => t.epilogue)?.tier ?? Number.POSITIVE_INFINITY;
+	const buyable = Math.max(
+		0,
+		Math.min(goal, epilogueStart - 1) - projectedTier,
+	);
+	return {
+		projectedXp,
+		projectedTier,
+		finishDate,
+		onTrack: projectedXp >= req.goalXp,
+		tiersShort: Math.max(0, goal - projectedTier),
+		vpToFinish: buyable * VP_PER_TIER,
+	};
 }

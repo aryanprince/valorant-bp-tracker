@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { cn } from "./ui";
 
 const tab =
-	"relative px-1 py-5 font-label font-semibold text-sm uppercase tracking-[0.2em] text-mist transition hover:text-bone";
+	"relative whitespace-nowrap px-1 py-5 font-label font-semibold text-xs uppercase tracking-[0.15em] text-mist transition hover:text-bone sm:text-sm sm:tracking-[0.2em]";
 
 export function Header() {
 	return (
@@ -14,15 +14,16 @@ export function Header() {
 					className="clip-slant flex items-center gap-2 bg-red py-3 pr-8 pl-4 transition hover:bg-red-dark sm:pl-6"
 				>
 					<Logo />
-					<span className="font-display text-2xl text-bone uppercase leading-none tracking-wide">
+					<span className="hidden font-display text-2xl text-bone uppercase leading-none tracking-wide sm:inline">
 						BP Tracker
 					</span>
 				</Link>
-				<nav className="flex items-center gap-5">
+				<nav className="flex items-center gap-4 sm:gap-6">
 					{(
 						[
 							["/", "Tracker"],
-							["/passes", "Passes"],
+							["/rewards", "Rewards"],
+							["/passes", "Past passes"],
 						] as const
 					).map(([to, label]) => (
 						<Link

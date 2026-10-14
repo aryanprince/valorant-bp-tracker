@@ -15,7 +15,7 @@ export const Route = createFileRoute("/passes/$passId")({
 		return pass;
 	},
 	head: ({ loaderData }) => ({
-		meta: [{ title: `${loaderData?.name ?? "Battlepass"} — BP Tracker` }],
+		meta: [{ title: `${loaderData?.name ?? "Battlepass"} | BP Tracker` }],
 	}),
 	pendingComponent: () => (
 		<>

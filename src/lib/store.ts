@@ -2,19 +2,24 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { type Checkin, DEFAULT_PLAN, type Plan, type Reading } from "./xp";
+import {
+	type Checkin,
+	DEFAULT_SETTINGS,
+	type Reading,
+	type Settings,
+} from "./xp";
 
 const KEY = "bp-tracker:v1";
 
 type Saved = {
-	plan: Plan;
+	settings: Settings;
 	/** Latest screen reading, per pass, with when it was entered. */
 	readings: Record<string, Reading & { at?: number }>;
 	/** At most one check-in per local day, per pass. */
 	checkins: Record<string, Checkin[]>;
 };
 
-const EMPTY: Saved = { plan: DEFAULT_PLAN, readings: {}, checkins: {} };
+const EMPTY: Saved = { settings: DEFAULT_SETTINGS, readings: {}, checkins: {} };
 
 export const DEFAULT_READING: Reading = {
 	tier: 2,
@@ -27,12 +32,14 @@ function load(): Saved {
 	try {
 		const raw = localStorage.getItem(KEY);
 		if (!raw) return EMPTY;
-		const saved = JSON.parse(raw) as Partial<Saved>;
+		const saved = JSON.parse(raw) as Partial<Saved> & {
+			plan?: Partial<Settings>;
+		};
 		return {
-			plan: {
-				...DEFAULT_PLAN,
-				...saved.plan,
-				games: { ...DEFAULT_PLAN.games, ...saved.plan?.games },
+			settings: {
+				...DEFAULT_SETTINGS,
+				...migrate(saved.plan),
+				...saved.settings,
 			},
 			readings: saved.readings ?? {},
 			checkins: saved.checkins ?? {},
@@ -40,6 +47,15 @@ function load(): Saved {
 	} catch {
 		return EMPTY;
 	}
+}
+
+/** v1 stored a "plan" whose defaults were wrong (5 days, 23,040 XP missions). */
+function migrate(plan?: Partial<Settings> & { games?: unknown }) {
+	if (!plan) return {};
+	const { games: _, ...rest } = plan;
+	if (rest.weeklyMissionXp === 23040) delete rest.weeklyMissionXp;
+	if (rest.daysPerWeek === 5) delete rest.daysPerWeek;
+	return rest;
 }
 
 const sameDay = (a: number, b: number) =>
@@ -65,9 +81,9 @@ export function useTracker(passId: string) {
 		});
 	}, []);
 
-	const setPlan = useCallback(
-		(patch: Partial<Plan>) =>
-			update((s) => ({ ...s, plan: { ...s.plan, ...patch } })),
+	const setSettings = useCallback(
+		(patch: Partial<Settings>) =>
+			update((s) => ({ ...s, settings: { ...s.settings, ...patch } })),
 		[update],
 	);
 
@@ -110,11 +126,11 @@ export function useTracker(passId: string) {
 	const stored = saved.readings[passId];
 	return {
 		ready,
-		plan: saved.plan,
+		settings: saved.settings,
 		reading: stored ?? null,
 		readingAt: stored?.at ?? null,
 		checkins: saved.checkins[passId] ?? [],
-		setPlan,
+		setSettings,
 		setReading,
 		clearHistory,
 	};

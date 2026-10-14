@@ -4,17 +4,19 @@ import snapshot from "@/data/pass-snapshot.json";
 
 import type { Pass } from "./types";
 import {
-	DEFAULT_PLAN,
-	forecast,
+	DEFAULT_SETTINGS,
 	measuredPace,
-	playDay,
 	positionAt,
+	project,
+	requirement,
 	totalXp,
 	xpThrough,
 } from "./xp";
 
 const pass = snapshot as Pass;
-const reading = { tier: 6, xpInTier: 1148, dailiesDone: 4, missionsDone: 0 };
+const now = new Date("2026-10-14T18:00:00Z");
+// Straight off Aryan's screen: Tier 9 Loyal Companions Card, 1,420 / 7,250 XP.
+const reading = { tier: 9, xpInTier: 1420, dailiesDone: 4, missionsDone: 1 };
 
 describe("tier math", () => {
 	test("matches Riot's published totals", () => {
@@ -23,38 +25,52 @@ describe("tier math", () => {
 	});
 
 	test("reads the in-game progress bar", () => {
-		// TIER 6, 1,148 / 5,000 XP → tiers 2–5 done (2000+2750+3500+4250).
-		expect(totalXp(pass, 6, 1148)).toBe(13_648);
-		expect(positionAt(pass, 13_648)).toEqual({ tier: 6, xpInTier: 1148 });
+		// Tiers 2–8 done: 2000+2750+3500+4250+5000+5750+6500 = 29,750.
+		expect(totalXp(pass, 9, 1420)).toBe(31_170);
+		expect(positionAt(pass, 31_170)).toEqual({ tier: 9, xpInTier: 1420 });
 	});
 });
 
-describe("plan", () => {
-	test("boosts only apply to match XP", () => {
-		const plan = {
-			...DEFAULT_PLAN,
-			games: { unrated: 1, swiftplay: 0, quick: 0, deathmatch: 0 },
-			premium: true,
-			gamePass: true,
-		};
-		const day = playDay(plan);
-		expect(day.match).toBe(Math.round(4400 * 1.23));
-		expect(day.dailies).toBe(2000); // 11 points → 2 checkpoints
+describe("requirement", () => {
+	const req = requirement({ pass, reading, settings: DEFAULT_SETTINGS, now });
+
+	test("splits what's left into weeklies, dailies and matches", () => {
+		expect(req.remaining).toBe(980_000 - 31_170);
+		// 12 weeks × 3 missions, 1 already done, 15,800 each.
+		expect(req.weeklyMissionsLeft).toBe(35);
+		expect(req.sources.weeklies).toBe(35 * 15_800);
+		// Today's dailies are done; 83 full days left at 4,000.
+		expect(req.sources.dailies).toBe(83 * 4000);
+		expect(
+			req.sources.weeklies + req.sources.dailies + req.sources.matches,
+		).toBe(req.remaining);
 	});
 
-	test("a casual week projects a sane finish", () => {
-		const f = forecast({
+	test("casual play is enough once dailies cover the match XP", () => {
+		const unrated = req.modes.unrated;
+		expect(unrated.dailiesFloor).toBe(2);
+		expect(unrated.dailiesCover).toBe(true);
+		expect(unrated.recommended).toBe(2);
+	});
+
+	test("next unlock is the tier on screen", () => {
+		expect(req.nextUnlock?.tier.reward.name).toBe("Loyal Companions Card");
+		expect(req.nextUnlock?.xpLeft).toBe(7250 - 1420);
+	});
+
+	test("skipping missions means a lot more games", () => {
+		const grind = requirement({
 			pass,
 			reading,
-			plan: DEFAULT_PLAN,
-			now: new Date("2026-10-15T12:00:00Z"),
+			settings: { ...DEFAULT_SETTINGS, weeklies: false, dailies: false },
+			now,
 		});
-		expect(f.remaining).toBe(980_000 - 13_648);
-		expect(f.projectedTier).toBeGreaterThan(30);
-		expect(f.projectedTier).toBeLessThanOrEqual(55);
-		expect(f.gamesNeeded).not.toBeNull();
+		expect(grind.sources.matches).toBe(grind.remaining);
+		expect(grind.modes.unrated.games).toBeGreaterThan(200);
 	});
+});
 
+describe("history", () => {
 	test("measured pace needs a day of history", () => {
 		const day = 24 * 60 * 60 * 1000;
 		expect(measuredPace([{ at: 0, tier: 2, xpInTier: 0, xp: 0 }])).toBeNull();
@@ -64,5 +80,13 @@ describe("plan", () => {
 				{ at: 2 * day, tier: 5, xpInTier: 0, xp: 20_000 },
 			]),
 		).toEqual({ perDay: 10_000, days: 2 });
+	});
+
+	test("a slow pace comes up short and prices the gap", () => {
+		const req = requirement({ pass, reading, settings: DEFAULT_SETTINGS, now });
+		const p = project(pass, req, 5000, 50, now);
+		expect(p.onTrack).toBe(false);
+		expect(p.finishDate).toBeNull();
+		expect(p.vpToFinish).toBe(p.tiersShort * 300);
 	});
 });

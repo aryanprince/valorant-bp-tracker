@@ -7,7 +7,7 @@ import {
 
 import appCss from "../index.css?url";
 
-const TITLE = "Battlepass Tracker — VALORANT";
+const TITLE = "BP Tracker | VALORANT battlepass calculator";
 const DESCRIPTION =
 	"Punch in your tier and XP, see exactly when you'll finish the VALORANT battlepass.";
 

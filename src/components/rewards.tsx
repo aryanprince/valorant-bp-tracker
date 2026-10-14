@@ -59,11 +59,14 @@ export function TierTile({
 	tier,
 	state = "locked",
 	progress,
+	compact,
 }: {
 	tier: Tier;
 	state?: TileState;
 	/** 0–1, only for the current tier. */
 	progress?: number;
+	/** Just "Tier N" under the art, for tight strips. */
+	compact?: boolean;
 }) {
 	return (
 		<div
@@ -91,7 +94,8 @@ export function TierTile({
 			</div>
 			<div
 				className={cn(
-					"relative aspect-square overflow-hidden p-3",
+					"relative aspect-square overflow-hidden",
+					compact ? "p-2" : "p-3",
 					tier.reward.highlighted && "bg-gradient-to-b from-gold/10",
 					tier.reward.kind === "card" && "p-0",
 				)}
@@ -105,24 +109,40 @@ export function TierTile({
 					)}
 				/>
 				{state !== "owned" && (
-					<Lock className="absolute bottom-2 left-2 size-4 text-bone/80 drop-shadow" />
+					<Lock
+						className={cn(
+							"absolute text-bone/80 drop-shadow",
+							compact ? "bottom-1 left-1 size-3" : "bottom-2 left-2 size-4",
+						)}
+					/>
 				)}
-				{tier.epilogue && (
+				{tier.epilogue && !compact && (
 					<span className="absolute top-1.5 right-1.5 bg-gold/90 px-1 font-label font-semibold text-[10px] text-ink uppercase tracking-wider">
 						Epilogue
 					</span>
 				)}
 			</div>
-			<div className="border-line/60 border-t bg-ink/40 px-2 py-1.5 text-center">
-				<div className="font-label font-semibold text-bone text-xs uppercase tracking-wider">
+			<div
+				className={cn(
+					"border-line/60 border-t bg-ink/40 text-center",
+					compact ? "px-1 py-1" : "px-2 py-1.5",
+				)}
+				title={tier.reward.name}
+			>
+				<div
+					className={cn(
+						"font-label font-semibold uppercase tracking-wider",
+						compact ? "text-[10px]" : "text-xs",
+						state === "current" ? "text-bone" : "text-bone/80",
+					)}
+				>
 					Tier {tier.tier}
 				</div>
-				<div
-					className="truncate text-[11px] text-mist"
-					title={tier.reward.name}
-				>
-					{tier.reward.name}
-				</div>
+				{!compact && (
+					<div className="truncate text-[11px] text-mist">
+						{tier.reward.name}
+					</div>
+				)}
 			</div>
 		</div>
 	);

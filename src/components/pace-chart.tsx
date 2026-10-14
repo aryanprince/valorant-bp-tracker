@@ -20,7 +20,8 @@ export function PaceChart({
 	goalXp: number;
 	now: number;
 	currentXp: number;
-	projectedXp: number;
+	/** Only drawn once there's a measured pace to extend. */
+	projectedXp: number | null;
 	checkins: Checkin[];
 }) {
 	// Draw at the real pixel width so labels stay readable on phones.
@@ -34,7 +35,7 @@ export function PaceChart({
 		return () => ro.disconnect();
 	}, []);
 
-	const top = Math.max(goalXp, projectedXp, currentXp) * 1.05;
+	const top = Math.max(goalXp, projectedXp ?? 0, currentXp) * 1.05;
 	const x = (t: number) =>
 		PAD.left + ((t - start) / (end - start)) * (W - PAD.left - PAD.right);
 	const y = (xp: number) =>
@@ -50,7 +51,7 @@ export function PaceChart({
 		(_, i) => start + ((end - start) * i) / 4,
 	);
 	const nowClamped = Math.min(end, Math.max(start, now));
-	const ahead = projectedXp >= goalXp;
+	const ahead = projectedXp !== null && projectedXp >= goalXp;
 
 	return (
 		<figure ref={ref}>
@@ -127,22 +128,26 @@ export function PaceChart({
 				/>
 
 				{/* Projection to the end of the act */}
-				<line
-					x1={x(nowClamped)}
-					y1={y(currentXp)}
-					x2={x(end)}
-					y2={y(projectedXp)}
-					stroke={ahead ? "#e8c26a" : "#ff4655"}
-					strokeWidth={2}
-					strokeDasharray="3 5"
-					strokeLinecap="round"
-				/>
-				<circle
-					cx={x(end)}
-					cy={y(projectedXp)}
-					r={4}
-					fill={ahead ? "#e8c26a" : "#ff4655"}
-				/>
+				{projectedXp !== null && (
+					<>
+						<line
+							x1={x(nowClamped)}
+							y1={y(currentXp)}
+							x2={x(end)}
+							y2={y(projectedXp)}
+							stroke={ahead ? "#e8c26a" : "#ff4655"}
+							strokeWidth={2}
+							strokeDasharray="3 5"
+							strokeLinecap="round"
+						/>
+						<circle
+							cx={x(end)}
+							cy={y(projectedXp)}
+							r={4}
+							fill={ahead ? "#e8c26a" : "#ff4655"}
+						/>
+					</>
+				)}
 
 				{/* What actually happened */}
 				<polyline
@@ -168,9 +173,11 @@ export function PaceChart({
 			</svg>
 			<figcaption className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-label text-mist text-xs uppercase tracking-wider">
 				<Key color="#17e5b0">Your progress</Key>
-				<Key color={ahead ? "#e8c26a" : "#ff4655"} dashed>
-					Where you're headed
-				</Key>
+				{projectedXp !== null && (
+					<Key color={ahead ? "#e8c26a" : "#ff4655"} dashed>
+						Where your pace lands
+					</Key>
+				)}
 				<Key color="#8b978f" dashed>
 					Pace to finish on time
 				</Key>
