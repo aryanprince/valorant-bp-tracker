@@ -86,7 +86,7 @@ function Tracker() {
 							req={p.req}
 							settings={p.settings}
 							now={p.now.getTime()}
-							onMode={(mode) => p.setSettings({ mode })}
+							onChange={p.setSettings}
 							endTime={pass.endTime}
 							pace={p.pace}
 							projection={p.projection}
@@ -100,7 +100,11 @@ function Tracker() {
 						/>
 					</div>
 
-					<XpSources req={p.req} settings={p.settings} />
+					<XpSources
+						req={p.req}
+						settings={p.settings}
+						onChange={p.setSettings}
+					/>
 
 					{/* Only worth the space once there are a few days to draw. */}
 					{p.checkins.length > 1 && (

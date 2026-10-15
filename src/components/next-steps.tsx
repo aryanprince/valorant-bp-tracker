@@ -5,15 +5,20 @@ import {
 	gameXp,
 	MODE_IDS,
 	MODES,
-	type ModeId,
-	PARTY_BOOST,
 	type Projection,
 	type Requirement,
 	type Settings,
 } from "@/lib/xp";
 
 import { RewardArt } from "./rewards";
-import { cn, Label, Panel, Segmented, Stat, Toggle } from "./ui";
+import {
+	DaysSelect,
+	GamePassToggle,
+	PartyPicker,
+	PremiumToggle,
+	WeeklyXpInput,
+} from "./setting-controls";
+import { cn, Label, Panel, Stat } from "./ui";
 
 const DAY = 24 * 60 * 60 * 1000;
 /** Mode · a day · total · finish, shared by the header and each row. */
@@ -24,7 +29,7 @@ const ROW =
 export function NextSteps({
 	req,
 	settings,
-	onMode,
+	onChange,
 	endTime,
 	pace,
 	projection,
@@ -33,7 +38,7 @@ export function NextSteps({
 	req: Requirement;
 	settings: Settings;
 	now: number;
-	onMode: (mode: ModeId) => void;
+	onChange: (patch: Partial<Settings>) => void;
 	endTime: string;
 	pace: { perDay: number; days: number } | null;
 	projection: Projection | null;
@@ -42,17 +47,12 @@ export function NextSteps({
 	const plan = req.modes[mode];
 	const done = req.remaining === 0;
 	const missions = settings.dailies || settings.weeklies;
-	const perWeek = settings.daysPerWeek < 7;
 	const fewest = Math.min(...MODE_IDS.map((id) => req.modes[id].totalGames));
 
 	return (
 		<Panel
 			title="What to do"
-			aside={
-				<span className="font-label text-mist text-xs uppercase tracking-wider">
-					Play {perWeek ? `${settings.daysPerWeek} days a week` : "every day"}
-				</span>
-			}
+			aside={<DaysSelect settings={settings} onChange={onChange} />}
 		>
 			{done ? (
 				<Headline>
@@ -82,7 +82,7 @@ export function NextSteps({
 									key={id}
 									type="button"
 									aria-pressed={on}
-									onClick={() => onMode(id)}
+									onClick={() => onChange({ mode: id })}
 									className={cn(
 										ROW,
 										"w-full border-line/60 border-t border-l-2 py-3 text-left transition",
@@ -340,55 +340,55 @@ export function Today({
 				)}
 			</ul>
 
-			<div className="mt-4 space-y-3 border-line/60 border-t pt-4">
+			<div className="mt-4 space-y-2 border-line/60 border-t pt-4">
 				<Label>Boosts on match XP</Label>
-				<Toggle
-					checked={settings.gamePass}
-					onChange={(gamePass) => onChange({ gamePass })}
-					hint="+20% · check Rewards Programs in VALORANT's top bar"
-				>
-					PC Game Pass
-				</Toggle>
-				<div className="flex flex-wrap items-center justify-between gap-2">
-					<span className="font-label font-semibold text-bone uppercase tracking-wider">
-						Usually queue{" "}
-						<span className="text-mist">
-							{settings.partySize > 1
-								? `+${Math.round((PARTY_BOOST[settings.partySize] ?? 0) * 100)}%`
-								: "solo"}
-						</span>
-					</span>
-					<Segmented
-						label="Party size"
-						value={settings.partySize}
-						onChange={(partySize) => onChange({ partySize })}
-						options={[1, 2, 3, 4, 5].map((n) => ({
-							value: n,
-							label: n === 1 ? "Solo" : n,
-						}))}
-					/>
+				<PremiumToggle settings={settings} onChange={onChange} />
+				<GamePassToggle settings={settings} onChange={onChange} />
+				<div className="pt-1">
+					<PartyPicker settings={settings} onChange={onChange} />
 				</div>
 			</div>
-			<Tip settings={settings} />
+			<Tip settings={settings} onChange={onChange} />
 		</Panel>
 	);
 }
 
 /** A nudge when you're skipping the cheapest XP there is. */
-function Tip({ settings: s }: { settings: Settings }) {
+function Tip({
+	settings: s,
+	onChange,
+}: {
+	settings: Settings;
+	onChange: (patch: Partial<Settings>) => void;
+}) {
 	const tip = !s.weeklies
-		? "Weekly missions are about half the pass. Even a few a week saves dozens of games. Turn them on in settings."
+		? {
+				text: "Weekly missions are about half the pass. Even a few a week saves dozens of games.",
+				patch: { weeklies: true },
+			}
 		: !s.dailies
-			? "Dailies are 4,000 XP a day for about 2 Unrated games. Cheapest XP in the game. Turn them on in settings."
+			? {
+					text: "Dailies are 4,000 XP a day for about 2 Unrated games. Cheapest XP in the game.",
+					patch: { dailies: true },
+				}
 			: null;
 	if (!tip) return null;
 	return (
-		<p className="mt-4 border-gold border-l-2 bg-gold/5 px-3 py-2 text-bone/80 text-sm">
-			<span className="font-label font-semibold text-gold uppercase tracking-wider">
-				Tip ·{" "}
-			</span>
-			{tip}
-		</p>
+		<div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-gold border-l-2 bg-gold/5 px-3 py-2 text-bone/80 text-sm">
+			<p className="min-w-0 flex-1">
+				<span className="font-label font-semibold text-gold uppercase tracking-wider">
+					Tip ·{" "}
+				</span>
+				{tip.text}
+			</p>
+			<button
+				type="button"
+				onClick={() => onChange(tip.patch)}
+				className="border border-gold/60 px-3 py-1 font-label font-semibold text-gold text-xs uppercase tracking-wider transition hover:bg-gold/10"
+			>
+				Count them
+			</button>
+		</div>
 	);
 }
 
@@ -437,9 +437,11 @@ function Row({
 export function XpSources({
 	req,
 	settings,
+	onChange,
 }: {
 	req: Requirement;
 	settings: Settings;
+	onChange: (patch: Partial<Settings>) => void;
 }) {
 	const { weeklies, dailies, matches } = req.sources;
 	const total = Math.max(1, req.remaining);
@@ -510,12 +512,24 @@ export function XpSources({
 					</div>
 				))}
 			</dl>
-			<p className="mt-5 text-mist text-xs leading-relaxed">
-				Missions are the cheap XP: a casual player who clears them barely needs
-				extra games. Riot doesn't publish weekly mission XP, so we use this
-				week's in-game value. Later weeks usually pay more, so this errs on the
-				safe side.
-			</p>
+			<div className="mt-5 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-line/60 border-t pt-4">
+				<p className="max-w-xl text-mist text-xs leading-relaxed">
+					Missions are the cheap XP: a casual player who clears them barely
+					needs extra games. Riot doesn't publish weekly mission XP, so we use
+					this week's in-game value (hover MISSIONS in VALORANT, each one shows
+					+XP). Later weeks usually pay more, so this errs on the safe side.
+				</p>
+				{settings.weeklies && (
+					<div className="w-full sm:w-56">
+						<Label>XP per weekly mission</Label>
+						<WeeklyXpInput
+							settings={settings}
+							onChange={onChange}
+							className="max-w-none"
+						/>
+					</div>
+				)}
+			</div>
 		</Panel>
 	);
 }

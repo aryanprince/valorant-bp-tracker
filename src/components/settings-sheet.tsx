@@ -1,12 +1,21 @@
 import { Settings2, X } from "lucide-react";
 import { useRef } from "react";
 
-import { fmt } from "@/lib/format";
-import { DEFAULT_WEEKLY_MISSION_XP, type Settings } from "@/lib/xp";
+import type { Settings } from "@/lib/xp";
 
-import { Label, Segmented, Stepper, Toggle } from "./ui";
+import {
+	DailiesToggle,
+	DaysPicker,
+	GamePassToggle,
+	PartyPicker,
+	PremiumToggle,
+	WEEKLY_XP_HELP,
+	WeekliesToggle,
+	WeeklyXpInput,
+} from "./setting-controls";
+import { Label } from "./ui";
 
-/** Everything that's set once and rarely touched, out of the main flow. */
+/** Every setting in one place. The ones you'd tweak often also sit in the panels they affect. */
 export function SettingsSheet({
 	settings: s,
 	onChange,
@@ -21,8 +30,12 @@ export function SettingsSheet({
 	const ref = useRef<HTMLDialogElement>(null);
 	const summary = [
 		s.premium ? "Premium" : "Free pass",
+		s.gamePass && "Game Pass",
+		s.partySize > 1 && `Party of ${s.partySize}`,
 		s.daysPerWeek < 7 ? `${s.daysPerWeek} days a week` : "Every day",
-	].join(" · ");
+	]
+		.filter(Boolean)
+		.join(" · ");
 
 	return (
 		<>
@@ -61,31 +74,18 @@ export function SettingsSheet({
 					</header>
 
 					<div className="flex-1 space-y-7 overflow-y-auto p-5">
-						<section>
-							<Label>Battlepass</Label>
-							<Toggle
-								checked={s.premium}
-								onChange={(premium) => onChange({ premium })}
-								hint="+3% match XP · “Battlepass 3% XP boost enabled”"
-							>
-								Premium battlepass
-							</Toggle>
-							<p className="mt-2 text-mist text-xs">
-								Game Pass and party size live in the Today panel.
-							</p>
+						<section className="space-y-2">
+							<Label>Boosts on match XP</Label>
+							<PremiumToggle settings={s} onChange={onChange} />
+							<GamePassToggle settings={s} onChange={onChange} />
+							<div className="pt-1">
+								<PartyPicker settings={s} onChange={onChange} />
+							</div>
 						</section>
 
 						<section>
 							<Label>Days you play a week</Label>
-							<Segmented
-								label="Days per week"
-								value={s.daysPerWeek}
-								onChange={(daysPerWeek) => onChange({ daysPerWeek })}
-								options={[1, 2, 3, 4, 5, 6, 7].map((n) => ({
-									value: n,
-									label: n,
-								}))}
-							/>
+							<DaysPicker settings={s} onChange={onChange} />
 							<p className="mt-2 text-mist text-xs">
 								Missed days bank a double checkpoint for later (up to 3), which
 								we count.
@@ -94,41 +94,15 @@ export function SettingsSheet({
 
 						<section className="space-y-2">
 							<Label>Missions</Label>
-							<Toggle
-								checked={s.dailies}
-								onChange={(dailies) => onChange({ dailies })}
-								hint="4 × 1,000 XP a day"
-							>
-								I do my dailies
-							</Toggle>
-							<Toggle
-								checked={s.weeklies}
-								onChange={(weeklies) => onChange({ weeklies })}
-								hint="3 a week, they stack until the act ends"
-							>
-								I do my weeklies
-							</Toggle>
+							<DailiesToggle settings={s} onChange={onChange} />
+							<WeekliesToggle settings={s} onChange={onChange} />
 							{s.weeklies && (
 								<div className="border border-line/60 p-3">
 									<p className="mb-2 font-label font-semibold text-bone text-sm uppercase tracking-wider">
 										XP per weekly mission
 									</p>
-									<p className="mb-3 text-mist text-xs">
-										Hover MISSIONS in VALORANT, each one shows +XP. This act
-										started at {fmt(DEFAULT_WEEKLY_MISSION_XP)}. Update it when
-										a new week pays more.
-									</p>
-									<div className="max-w-56">
-										<Stepper
-											label="XP per weekly mission"
-											value={s.weeklyMissionXp}
-											step={100}
-											max={100000}
-											onChange={(weeklyMissionXp) =>
-												onChange({ weeklyMissionXp })
-											}
-										/>
-									</div>
+									<p className="mb-3 text-mist text-xs">{WEEKLY_XP_HELP}</p>
+									<WeeklyXpInput settings={s} onChange={onChange} />
 								</div>
 							)}
 						</section>
